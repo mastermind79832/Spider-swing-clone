@@ -73,3 +73,8 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# Colyseus server generated files
+/Server/spider-swing-server/node_modules/
+/Server/spider-swing-server/dist/
+/Server/spider-swing-server/.env*
