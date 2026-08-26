@@ -78,3 +78,6 @@ crashlytics-build.properties
 /Server/spider-swing-server/node_modules/
 /Server/spider-swing-server/dist/
 /Server/spider-swing-server/.env*
+
+# Local codebase analysis output; it is not a Unity asset or game source.
+/graphify-out/

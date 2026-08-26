@@ -21,6 +21,13 @@ namespace SpiderSwing.Editor
             PlayerSettings.WebGL.decompressionFallback = false;
             PlayerSettings.WebGL.debugSymbolMode = WebGLDebugSymbolMode.Off;
 
+            // This folder is generated output only. Clearing it avoids stale files
+            // from a previous Web build inflating the itch.io archive.
+            if (Directory.Exists(OutputPath))
+            {
+                Directory.Delete(OutputPath, true);
+            }
+
             Directory.CreateDirectory(OutputPath);
 
             var scenes = EditorBuildSettings.scenes

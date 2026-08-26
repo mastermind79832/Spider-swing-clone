@@ -59,4 +59,27 @@ describe("spider_room foundation", () => {
     await expect(colyseus.connectTo(room)).rejects.toThrow();
     await Promise.all(clients.map((client) => client.leave()));
   });
+
+  it("accepts a valid transform only for the sending player", async () => {
+    const room = await colyseus.createRoom("spider_room");
+    const sender = await colyseus.connectTo(room);
+    const observer = await colyseus.connectTo(room);
+    const senderState = room.state.players.get(sender.sessionId)!;
+    const observerState = room.state.players.get(observer.sessionId)!;
+
+    sender.send("transform", { x: 12, y: 3, z: -8, yaw: 450 });
+    await new Promise((resolve) => setTimeout(resolve, 20));
+
+    expect(senderState.x).toBe(12);
+    expect(senderState.y).toBe(3);
+    expect(senderState.z).toBe(-8);
+    expect(senderState.yaw).toBe(90);
+    expect(observerState.x).toBe(2);
+
+    sender.send("transform", { x: 1000, y: 3, z: -8, yaw: 0 });
+    await new Promise((resolve) => setTimeout(resolve, 20));
+
+    expect(senderState.x).toBe(12);
+    await Promise.all([sender.leave(), observer.leave()]);
+  });
 });

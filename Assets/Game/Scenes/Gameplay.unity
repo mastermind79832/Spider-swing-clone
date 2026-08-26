@@ -131,6 +131,8 @@ GameObject:
   - component: {fileID: 117212802}
   - component: {fileID: 117212801}
   - component: {fileID: 117212800}
+  - component: {fileID: 117212804}
+  - component: {fileID: 117212803}
   m_Layer: 0
   m_Name: LocalPlayerMarker
   m_TagString: Untagged
@@ -233,6 +235,49 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 117212798}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &117212803
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 117212798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a21795eeee50324eb76ab13dce2d3f0, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::SpiderSwing.Gameplay.LocalPlayerController
+  moveSpeed: 7
+  rotationSharpness: 14
+  gravity: -24
+  jumpHeight: 2.25
+  inputActions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  orbitCamera: {fileID: 1600489596}
+--- !u!143 &117212804
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 117212798}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 2
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &476544307
 GameObject:
   m_ObjectHideFlags: 0
@@ -260,7 +305,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 48911a6e8b50cc044a3e868b3ff4c8be, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpiderSwing.Network.ColyseusClient
   endpoint: ws://localhost:2567
   roomName: spider_room
@@ -291,6 +336,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1600489595}
   - component: {fileID: 1600489594}
+  - component: {fileID: 1600489596}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -364,6 +410,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1600489596
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1600489593}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc2e36f017a02f84c95a5fafc358a761, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpiderSwing.Gameplay.OrbitCamera
+  target: {fileID: 117212799}
+  inputActions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  distance: 9
+  targetHeight: 1.2
+  mouseSensitivity: 0.12
+  minPitch: -15
+  maxPitch: 65
 --- !u!1 &2026695862
 GameObject:
   m_ObjectHideFlags: 0
