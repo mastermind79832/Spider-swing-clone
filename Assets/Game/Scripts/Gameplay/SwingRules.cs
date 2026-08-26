@@ -12,6 +12,12 @@ namespace SpiderSwing.Gameplay
 
     public static class SwingRules
     {
+        public static float EvaluateJumpVelocity(float jumpHeight, float gravity)
+        {
+            var downwardGravity = Mathf.Abs(gravity);
+            return Mathf.Sqrt(Mathf.Max(0f, jumpHeight * 2f * downwardGravity));
+        }
+
         public static bool CanStartSwing(
             bool grounded,
             int currentSwings,
@@ -59,9 +65,26 @@ namespace SpiderSwing.Gameplay
 
             var time = Mathf.Clamp01(normalizedTime);
             const float sampleOffset = 0.001f;
-            var before = curve.Evaluate(Mathf.Clamp01(time - sampleOffset));
-            var after = curve.Evaluate(Mathf.Clamp01(time + sampleOffset));
-            var slope = (after - before) / (2f * sampleOffset * duration);
+            float slope;
+            if (time <= sampleOffset)
+            {
+                var start = curve.Evaluate(time);
+                var next = curve.Evaluate(time + sampleOffset);
+                slope = (next - start) / (sampleOffset * duration);
+            }
+            else if (time >= 1f - sampleOffset)
+            {
+                var previous = curve.Evaluate(time - sampleOffset);
+                var end = curve.Evaluate(time);
+                slope = (end - previous) / (sampleOffset * duration);
+            }
+            else
+            {
+                var before = curve.Evaluate(time - sampleOffset);
+                var after = curve.Evaluate(time + sampleOffset);
+                slope = (after - before) / (2f * sampleOffset * duration);
+            }
+
             return Mathf.Clamp(slope, minimum, maximum);
         }
     }

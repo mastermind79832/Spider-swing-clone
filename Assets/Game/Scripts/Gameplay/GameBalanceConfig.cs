@@ -9,7 +9,7 @@ namespace SpiderSwing.Gameplay
         [Min(0f)] public float moveSpeed = 7f;
         [Min(0f)] public float rotationSharpness = 14f;
         [Negative] public float gravity = -24f;
-        [Min(0f)] public float jumpHeight = 2.25f;
+        [Min(0f)] public float jumpHeight = 6f;
 
         [Header("Swing")]
         [Min(1)] public int maxSwings = 2;

@@ -1,0 +1,9 @@
+{
+  "name": "SpiderSwing.Gameplay",
+  "references": [
+    "ColyseusSDK",
+    "Unity.InputSystem"
+  ],
+  "autoReferenced": true,
+  "allowUnsafeCode": false
+}

@@ -1,0 +1,14 @@
+{
+  "name": "SpiderSwing.PlayMode.Tests",
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ],
+  "references": [
+    "SpiderSwing.Gameplay",
+    "Unity.InputSystem"
+  ],
+  "autoReferenced": false,
+  "defineConstraints": [
+    "UNITY_INCLUDE_TESTS"
+  ]
+}
