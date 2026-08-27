@@ -21,10 +21,10 @@ namespace SpiderSwing.Gameplay
         public static bool CanStartSwing(
             bool grounded,
             int currentSwings,
-            bool insideSwingZone,
+            bool swingPermitted,
             bool alreadySwinging)
         {
-            return !grounded && currentSwings > 0 && insideSwingZone && !alreadySwinging;
+            return !grounded && currentSwings > 0 && swingPermitted && !alreadySwinging;
         }
 
         public static Vector3 CaptureDirection(Vector3 movementDirection, Vector3 forward)
@@ -100,6 +100,33 @@ namespace SpiderSwing.Gameplay
         {
             distance = Vector3.Distance(previousPosition, currentPosition);
             return state != PlayerMovementState.Dead && !isRespawning && distance > 0.0001f;
+        }
+    }
+
+    public static class WorldLimitRules
+    {
+        public static bool IsBeyondSideLimit(Vector3 position, float sideDeathX)
+        {
+            return Mathf.Abs(position.x) > Mathf.Abs(sideDeathX);
+        }
+
+        public static bool IsBelowDeathLimit(Vector3 position, float deathY)
+        {
+            return position.y < deathY;
+        }
+
+        public static Vector3 ClampMaximumY(Vector3 position, float maximumY)
+        {
+            return new Vector3(position.x, Mathf.Min(position.y, maximumY), position.z);
+        }
+    }
+
+    public static class CourseLayoutRules
+    {
+        public static int GapForIndex(int index)
+        {
+            var safeIndex = Mathf.Max(0, index);
+            return Mathf.RoundToInt(3f + 0.5f * safeIndex + 1.5f * safeIndex * safeIndex);
         }
     }
 }

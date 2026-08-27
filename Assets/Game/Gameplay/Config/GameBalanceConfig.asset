@@ -57,3 +57,6 @@ MonoBehaviour:
   releaseVelocityMinimum: -12
   releaseVelocityMaximum: 12
   respawnDelay: 1
+  sideDeathX: 45
+  deathY: -20
+  maximumY: 60

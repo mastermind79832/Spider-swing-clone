@@ -27,6 +27,19 @@ namespace SpiderSwing.Gameplay
         [Header("Respawn")]
         [Min(0f)] public float respawnDelay = 1f;
 
+        [Header("World Limits")]
+        [Min(0.1f)] public float sideDeathX = 45f;
+        public float deathY = -20f;
+        [Min(0.1f)] public float maximumY = 60f;
+
+        [Header("Progression")]
+        [Min(1)] public int maximumLevel = 10;
+        [Min(0f)] public float xpMultiplier = 1f;
+        [Min(0f)] public float baseXpToNextLevel = 100f;
+        [Min(0f)] public float movementSpeedPerLevel = 0.75f;
+        [Min(0f)] public float swingForwardMultiplierPerLevel = 0.15f;
+        [Min(1)] public int extraSwingEveryLevels = 2;
+
         private void OnValidate()
         {
             gravity = -Mathf.Abs(gravity);
@@ -34,6 +47,14 @@ namespace SpiderSwing.Gameplay
             swingDuration = Mathf.Max(0.05f, swingDuration);
             releaseVelocityMinimum = Mathf.Min(releaseVelocityMinimum, releaseVelocityMaximum);
             releaseVelocityMaximum = Mathf.Max(releaseVelocityMinimum, releaseVelocityMaximum);
+            maximumY = Mathf.Max(0.1f, maximumY);
+            deathY = Mathf.Min(deathY, maximumY - 0.1f);
+            maximumLevel = Mathf.Max(1, maximumLevel);
+            xpMultiplier = Mathf.Max(0f, xpMultiplier);
+            baseXpToNextLevel = Mathf.Max(0f, baseXpToNextLevel);
+            movementSpeedPerLevel = Mathf.Max(0f, movementSpeedPerLevel);
+            swingForwardMultiplierPerLevel = Mathf.Max(0f, swingForwardMultiplierPerLevel);
+            extraSwingEveryLevels = Mathf.Max(1, extraSwingEveryLevels);
         }
     }
 

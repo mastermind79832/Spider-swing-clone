@@ -7,7 +7,7 @@ namespace SpiderSwing.Tests
     public sealed class SpiderSwingRulesTests
     {
         [Test]
-        public void SwingRequiresAirbornePlayerChargeAndAllowedZone()
+        public void SwingRequiresAirbornePlayerChargeAndPermittedLocation()
         {
             Assert.That(SwingRules.CanStartSwing(false, 1, true, false), Is.True);
             Assert.That(SwingRules.CanStartSwing(true, 1, true, false), Is.False);
@@ -132,6 +132,112 @@ namespace SpiderSwing.Tests
             Assert.That(CoursePlatform.IsTopLanding(Vector3.up), Is.True);
             Assert.That(CoursePlatform.IsTopLanding(new Vector3(0f, 0.69f, 0.72f)), Is.False);
             Assert.That(CoursePlatform.IsTopLanding(Vector3.right), Is.False);
+        }
+
+        [Test]
+        public void ForbiddenHubContainsOnlyItsColliderAndMissingZoneFailsOpen()
+        {
+            var zoneObject = new GameObject("SwingForbiddenZone");
+            try
+            {
+                var collider = zoneObject.AddComponent<BoxCollider>();
+                collider.size = new Vector3(10f, 4f, 10f);
+                var zone = zoneObject.AddComponent<SwingForbiddenZone>();
+                zone.Configure(collider);
+
+                Assert.That(zone.Contains(Vector3.zero), Is.True);
+                Assert.That(zone.Contains(new Vector3(6f, 0f, 0f)), Is.False);
+                Assert.That(SwingRules.CanStartSwing(false, 1, true, false), Is.True);
+            }
+            finally
+            {
+                Object.DestroyImmediate(zoneObject);
+            }
+        }
+
+        [Test]
+        public void WorldLimitsKillAtSidesAndBelowButClampAbove()
+        {
+            Assert.That(WorldLimitRules.IsBeyondSideLimit(new Vector3(45.01f, 0f, 0f), 45f), Is.True);
+            Assert.That(WorldLimitRules.IsBeyondSideLimit(new Vector3(-45.01f, 0f, 0f), 45f), Is.True);
+            Assert.That(WorldLimitRules.IsBelowDeathLimit(new Vector3(0f, -20.01f, 0f), -20f), Is.True);
+            Assert.That(WorldLimitRules.IsBelowDeathLimit(new Vector3(0f, -20f, 0f), -20f), Is.False);
+            Assert.That(
+                WorldLimitRules.ClampMaximumY(new Vector3(3f, 61f, 7f), 60f),
+                Is.EqualTo(new Vector3(3f, 60f, 7f)));
+        }
+
+        [Test]
+        public void ProgressiveCourseGapsIncreaseAndMatchFormula()
+        {
+            var expected = new[] { 3, 5, 10, 18, 29 };
+            for (var index = 0; index < expected.Length; index++)
+            {
+                Assert.That(CourseLayoutRules.GapForIndex(index), Is.EqualTo(expected[index]));
+                if (index > 0)
+                {
+                    Assert.That(
+                        CourseLayoutRules.GapForIndex(index),
+                        Is.GreaterThan(CourseLayoutRules.GapForIndex(index - 1)));
+                }
+            }
+        }
+
+        [Test]
+        public void PlatformProgressKeepsLatestSavePointAndReward()
+        {
+            var playerObject = new GameObject("CheckpointTestPlayer");
+            var firstObject = new GameObject("P01");
+            var secondObject = new GameObject("P02");
+            var firstSave = new GameObject("Save point");
+            var secondSave = new GameObject("Save point");
+            try
+            {
+                var progress = playerObject.AddComponent<PlayerCheckpointProgress>();
+                var first = firstObject.AddComponent<CoursePlatform>();
+                var second = secondObject.AddComponent<CoursePlatform>();
+                first.Configure("P01", firstSave.transform, null, 1);
+                second.Configure("P02", secondSave.transform, null, 2);
+                firstSave.transform.position = new Vector3(0f, 1f, 3f);
+                secondSave.transform.position = new Vector3(0f, 1f, 10f);
+
+                Assert.That(progress.HasReachedCheckpoint, Is.False);
+                Assert.That(progress.Reach(first), Is.True);
+                Assert.That(progress.LastCheckpointId, Is.EqualTo("P01"));
+                Assert.That(progress.Reach(first), Is.False);
+                Assert.That(progress.Reach(second), Is.True);
+                Assert.That(progress.LastCheckpointId, Is.EqualTo("P02"));
+                Assert.That(progress.TryGetRespawn(out var position, out _), Is.True);
+                Assert.That(position, Is.EqualTo(secondSave.transform.position));
+                Assert.That(second.ReturnReward, Is.EqualTo(2));
+            }
+            finally
+            {
+                Object.DestroyImmediate(playerObject);
+                Object.DestroyImmediate(firstObject);
+                Object.DestroyImmediate(secondObject);
+                Object.DestroyImmediate(firstSave);
+                Object.DestroyImmediate(secondSave);
+            }
+        }
+
+        [Test]
+        public void PlatformRewardsMapToTheirOneBasedIndex()
+        {
+            for (var index = 1; index <= 20; index++)
+            {
+                var platformObject = new GameObject($"P{index:00}");
+                try
+                {
+                    var platform = platformObject.AddComponent<CoursePlatform>();
+                    platform.Configure($"P{index:00}", platformObject.transform, null, index);
+                    Assert.That(platform.ReturnReward, Is.EqualTo(index));
+                }
+                finally
+                {
+                    Object.DestroyImmediate(platformObject);
+                }
+            }
         }
     }
 }

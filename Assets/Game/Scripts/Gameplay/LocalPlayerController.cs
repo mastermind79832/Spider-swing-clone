@@ -19,8 +19,10 @@ namespace SpiderSwing.Gameplay
         [Header("References")]
         [SerializeField] private InputActionAsset inputActions;
         [SerializeField] private OrbitCamera orbitCamera;
-        [SerializeField] private SwingAllowedZone swingAllowedZone;
+        [SerializeField] private SwingForbiddenZone swingForbiddenZone;
         [SerializeField] private PlayerDeathController deathController;
+        [SerializeField] private PlayerCheckpointProgress checkpointProgress;
+        [SerializeField] private PlayerDemoRewards demoRewards;
         [SerializeField] private LineRenderer webLine;
         [SerializeField] private Transform webOrigin;
 
@@ -77,19 +79,23 @@ namespace SpiderSwing.Gameplay
         }
 
         public void ConfigureWorld(
-            SwingAllowedZone allowedZone,
+            SwingForbiddenZone forbiddenZone,
             PlayerDeathController configuredDeathController,
             LineRenderer configuredWebLine)
         {
-            swingAllowedZone = allowedZone;
+            swingForbiddenZone = forbiddenZone;
             deathController = configuredDeathController;
             webLine = configuredWebLine != null ? configuredWebLine : webLine;
+            checkpointProgress = GetComponent<PlayerCheckpointProgress>();
+            demoRewards = GetComponent<PlayerDemoRewards>();
             ConfigureWebLine();
         }
 
         private void Awake()
         {
             characterController = GetComponent<CharacterController>();
+            checkpointProgress = GetComponent<PlayerCheckpointProgress>();
+            demoRewards = GetComponent<PlayerDemoRewards>();
             characterController.height = 2f;
             characterController.radius = 0.45f;
             characterController.center = Vector3.zero;
@@ -247,12 +253,12 @@ namespace SpiderSwing.Gameplay
                 return false;
             }
 
-            var insideAllowedZone = swingAllowedZone != null
-                && swingAllowedZone.Contains(transform.position);
+            var swingPermitted = swingForbiddenZone == null
+                || !swingForbiddenZone.Contains(transform.position);
             if (!SwingRules.CanStartSwing(
                     IsGrounded,
                     currentSwings,
-                    insideAllowedZone,
+                    swingPermitted,
                     IsSwinging))
             {
                 return false;
@@ -367,6 +373,7 @@ namespace SpiderSwing.Gameplay
             lastTopPlatform = null;
             var previousPosition = transform.position;
             var flags = characterController.Move(delta);
+            ClampMaximumY();
             var nowGrounded = characterController.isGrounded
                 || (flags & CollisionFlags.Below) != 0
                 || HasGroundBelow();
@@ -400,10 +407,7 @@ namespace SpiderSwing.Gameplay
                     lastTopPlatform = FindTopPlatformBelow();
                 }
 
-                if (lastTopPlatform != null)
-                {
-                    currentSwings = maxSwings;
-                }
+                RegisterTopLanding(lastTopPlatform);
 
                 if (state == PlayerMovementState.Swinging)
                 {
@@ -448,17 +452,39 @@ namespace SpiderSwing.Gameplay
 
         private void OnControllerColliderHit(ControllerColliderHit hit)
         {
-            var deathSurface = hit.collider.GetComponentInParent<DeathSurface>();
-            if (deathSurface != null)
+            if (CoursePlatform.IsTopLanding(hit.normal))
             {
-                deathController?.TryDie(PlayerDeathReason.BottomFloor);
+                RegisterTopLanding(hit.collider.GetComponentInParent<CoursePlatform>());
+            }
+        }
+
+        private void RegisterTopLanding(CoursePlatform platform)
+        {
+            if (platform == null)
+            {
                 return;
             }
 
-            if (CoursePlatform.IsTopLanding(hit.normal))
+            // Every valid platform uses the same landing contract: restore all
+            // swing charges and remember that platform as the latest checkpoint.
+            lastTopPlatform = platform;
+            currentSwings = maxSwings;
+            checkpointProgress?.Reach(platform);
+        }
+
+        private void ClampMaximumY()
+        {
+            var maximumY = GetBalanceValue(value => value.maximumY, 60f);
+            if (transform.position.y <= maximumY)
             {
-                lastTopPlatform = hit.collider.GetComponentInParent<CoursePlatform>();
+                return;
             }
+
+            var clampedPosition = WorldLimitRules.ClampMaximumY(transform.position, maximumY);
+            characterController.enabled = false;
+            transform.position = clampedPosition;
+            characterController.enabled = true;
+            verticalVelocity = Mathf.Min(0f, verticalVelocity);
         }
 
         private bool HasGroundBelow()
@@ -557,6 +583,13 @@ namespace SpiderSwing.Gameplay
             GUILayout.Label("Controls: click game • WASD move • Mouse look • Space jump/swing • Esc unlock");
             GUILayout.Label($"State: {state} • Swings: {currentSwings}/{maxSwings}");
             GUILayout.Label("Traversal distance callback: ready for future XP");
+            GUILayout.EndArea();
+
+            GUILayout.BeginArea(
+                new Rect(Screen.width * 0.5f - 130f, Screen.height - 110f, 260f, 88f),
+                GUI.skin.box);
+            GUILayout.Label($"Swing: {currentSwings}/{maxSwings}");
+            GUILayout.Label($"Points: {demoRewards?.ReturnPoints ?? 0}");
             GUILayout.EndArea();
         }
     }
