@@ -60,3 +60,10 @@ MonoBehaviour:
   sideDeathX: 45
   deathY: -20
   maximumY: 60
+  maximumLevel: 10
+  xpMultiplier: 1
+  baseXpToNextLevel: 100
+  movementSpeedPerLevel: 0.75
+  swingForwardMultiplierPerLevel: 0.15
+  extraSwingEveryLevels: 2
+  treadmillXpPerSecond: 10

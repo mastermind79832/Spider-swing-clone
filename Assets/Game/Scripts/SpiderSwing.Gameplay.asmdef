@@ -2,7 +2,8 @@
   "name": "SpiderSwing.Gameplay",
   "references": [
     "ColyseusSDK",
-    "Unity.InputSystem"
+    "Unity.InputSystem",
+    "Unity.TextMeshPro"
   ],
   "autoReferenced": true,
   "allowUnsafeCode": false

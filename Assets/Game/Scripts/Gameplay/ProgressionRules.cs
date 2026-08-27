@@ -51,6 +51,15 @@ namespace SpiderSwing.Gameplay
             return Mathf.Max(1, baseMaxSwings) + extraSwings;
         }
 
+        public static int SwingsAfterMaxChange(int currentSwings, int previousMaximum, int newMaximum)
+        {
+            var safePreviousMaximum = Mathf.Max(1, previousMaximum);
+            var safeNewMaximum = Mathf.Max(1, newMaximum);
+            return currentSwings >= safePreviousMaximum
+                ? safeNewMaximum
+                : Mathf.Clamp(currentSwings, 0, safeNewMaximum);
+        }
+
         public static ProgressionResolution ResolveXp(
             int currentLevel,
             float currentXp,

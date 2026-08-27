@@ -23,6 +23,7 @@ namespace SpiderSwing.Gameplay
         [SerializeField] private PlayerDeathController deathController;
         [SerializeField] private PlayerCheckpointProgress checkpointProgress;
         [SerializeField] private PlayerDemoRewards demoRewards;
+        [SerializeField] private PlayerProgression progression;
         [SerializeField] private LineRenderer webLine;
         [SerializeField] private Transform webOrigin;
 
@@ -32,6 +33,7 @@ namespace SpiderSwing.Gameplay
         private float verticalVelocity;
         private int currentSwings;
         private int maxSwings;
+        private float swingForwardMultiplier = 1f;
         private PlayerMovementState state = PlayerMovementState.Grounded;
         private Vector3 swingDirection;
         private Vector3 swingAnchor;
@@ -52,6 +54,13 @@ namespace SpiderSwing.Gameplay
         public float VerticalVelocity => verticalVelocity;
         public int CurrentSwings => currentSwings;
         public int MaxSwings => maxSwings;
+        public float BaseMoveSpeed => balanceConfig != null ? balanceConfig.moveSpeed : 7f;
+        public float BaseSwingForwardMultiplier => balanceConfig != null
+            ? balanceConfig.swingForwardMultiplier
+            : 1f;
+        public int BaseMaxSwings => balanceConfig != null ? Mathf.Max(1, balanceConfig.maxSwings) : 2;
+        public float MoveSpeed => moveSpeed;
+        public float SwingForwardMultiplier => swingForwardMultiplier;
         public Vector3 SwingDirection => swingDirection;
         public float SwingElapsed => swingElapsed;
 
@@ -96,6 +105,7 @@ namespace SpiderSwing.Gameplay
             characterController = GetComponent<CharacterController>();
             checkpointProgress = GetComponent<PlayerCheckpointProgress>();
             demoRewards = GetComponent<PlayerDemoRewards>();
+            progression = GetComponent<PlayerProgression>();
             characterController.height = 2f;
             characterController.radius = 0.45f;
             characterController.center = Vector3.zero;
@@ -142,10 +152,12 @@ namespace SpiderSwing.Gameplay
                 gravity = balanceConfig.gravity;
                 jumpHeight = balanceConfig.jumpHeight;
                 maxSwings = Mathf.Max(1, balanceConfig.maxSwings);
+                swingForwardMultiplier = Mathf.Max(0f, balanceConfig.swingForwardMultiplier);
             }
             else
             {
                 maxSwings = 2;
+                swingForwardMultiplier = 1f;
             }
 
             if (!initialized)
@@ -299,7 +311,7 @@ namespace SpiderSwing.Gameplay
                 duration);
             var delta = swingDirection
                 * moveSpeed
-                * GetBalanceValue(value => value.swingForwardMultiplier, 1f)
+                * swingForwardMultiplier
                 * deltaTime;
             delta.y = desiredY - transform.position.y;
 
@@ -361,6 +373,45 @@ namespace SpiderSwing.Gameplay
             currentSwings = maxSwings;
             verticalVelocity = -2f;
             state = PlayerMovementState.Grounded;
+        }
+
+        public void ApplyProgressionStats(
+            float configuredMoveSpeed,
+            float configuredSwingForwardMultiplier,
+            int configuredMaxSwings)
+        {
+            moveSpeed = Mathf.Max(0f, configuredMoveSpeed);
+            swingForwardMultiplier = Mathf.Max(0f, configuredSwingForwardMultiplier);
+            var previousMaximum = maxSwings;
+            maxSwings = Mathf.Max(1, configuredMaxSwings);
+            currentSwings = ProgressionRules.SwingsAfterMaxChange(
+                currentSwings,
+                previousMaximum,
+                maxSwings);
+        }
+
+        public void ApplyPlayerSkinMaterial(Material skinMaterial)
+        {
+            if (skinMaterial == null)
+            {
+                return;
+            }
+
+            var renderers = GetComponentsInChildren<Renderer>(true);
+            foreach (var renderer in renderers)
+            {
+                if (renderer is LineRenderer)
+                {
+                    continue;
+                }
+
+                renderer.sharedMaterial = skinMaterial;
+            }
+        }
+
+        public void ConfigureProgression(PlayerProgression configuredProgression)
+        {
+            progression = configuredProgression;
         }
 
         private void MoveAndTrack(Vector3 delta, bool wasGrounded)
@@ -586,8 +637,17 @@ namespace SpiderSwing.Gameplay
             GUILayout.EndArea();
 
             GUILayout.BeginArea(
-                new Rect(Screen.width * 0.5f - 130f, Screen.height - 110f, 260f, 88f),
+                new Rect(Screen.width * 0.5f - 170f, Screen.height - 135f, 340f, 113f),
                 GUI.skin.box);
+            if (progression != null)
+            {
+                var xpText = progression.IsAtMaximumLevel
+                    ? "MAX"
+                    : $"{Mathf.FloorToInt(progression.CurrentXp)}/{Mathf.CeilToInt(progression.XpToNextLevel)}";
+                GUILayout.Label($"Level {progression.Level}  XP: {xpText}");
+                GUILayout.Label($"Speed: {moveSpeed:0.##}  Swing speed: {swingForwardMultiplier:0.##}  x{progression.XpMultiplier:0.##}");
+            }
+
             GUILayout.Label($"Swing: {currentSwings}/{maxSwings}");
             GUILayout.Label($"Points: {demoRewards?.ReturnPoints ?? 0}");
             GUILayout.EndArea();

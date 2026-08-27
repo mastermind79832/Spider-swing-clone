@@ -18,6 +18,8 @@ namespace SpiderSwing.Editor
         private const string InputActionsPath = "Assets/InputSystem_Actions.inputactions";
         private const string BalanceConfigPath = "Assets/Game/Gameplay/Config/GameBalanceConfig.asset";
         private const string PlatformPrefabPath = "Assets/Game/Prefab/Platform.prefab";
+        private const string UpgradePrefabPath = "Assets/Game/Prefab/Upgrade .prefab";
+        private const string UpgradeMaterialFolder = "Assets/Game/Material";
         private const int PlatformCount = 20;
 
         [MenuItem("Spider Swing/Apply Milestone 2B - Prefab Course")]
@@ -61,8 +63,10 @@ namespace SpiderSwing.Editor
             var playerController = EnsureComponent<LocalPlayerController>(player);
             EnsureComponent<PlayerCheckpointProgress>(player);
             EnsureComponent<PlayerDemoRewards>(player);
+            var progression = EnsureComponent<PlayerProgression>(player);
             orbitCamera.Configure(actions, player.transform);
             playerController.Configure(actions, orbitCamera, config);
+            progression.Configure(config, playerController);
 
             var webLine = EnsureComponent<LineRenderer>(player);
             ConfigureWebLine(webLine);
@@ -75,6 +79,145 @@ namespace SpiderSwing.Editor
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             Debug.Log("Spider Swing Milestone 2B prefab course setup completed: 20 linked platforms.");
+        }
+
+        [MenuItem("Spider Swing/Apply Milestone 3B - Local Progression")]
+        public static void ApplyLocalProgression()
+        {
+            var scene = EditorSceneManager.OpenScene(GameplayScenePath, OpenSceneMode.Single);
+            var player = GameObject.Find("LocalPlayerMarker");
+            var camera = Camera.main;
+            var actions = AssetDatabase.LoadAssetAtPath<InputActionAsset>(InputActionsPath);
+            if (player == null || camera == null || actions == null)
+            {
+                throw new InvalidOperationException(
+                    "Milestone 3B setup requires Gameplay, Main Camera, LocalPlayerMarker, and InputSystem_Actions.");
+            }
+
+            var config = EnsureBalanceConfig();
+            var orbitCamera = EnsureComponent<OrbitCamera>(camera.gameObject);
+            var localController = EnsureComponent<LocalPlayerController>(player);
+            var progression = EnsureComponent<PlayerProgression>(player);
+            orbitCamera.Configure(actions, player.transform);
+            localController.Configure(actions, orbitCamera, config);
+            progression.Configure(config, localController);
+
+            EditorUtility.SetDirty(player);
+            EditorUtility.SetDirty(progression);
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene, GameplayScenePath);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            Debug.Log("Spider Swing Milestone 3B local progression setup completed.");
+        }
+
+        [MenuItem("Spider Swing/Apply Milestone 3C - Training and Upgrades")]
+        public static void ApplyTrainingAndUpgrades()
+        {
+            var scene = EditorSceneManager.OpenScene(GameplayScenePath, OpenSceneMode.Single);
+            var player = GameObject.Find("LocalPlayerMarker");
+            var treadmill = GameObject.Find("Treadmill");
+            var camera = Camera.main;
+            var actions = AssetDatabase.LoadAssetAtPath<InputActionAsset>(InputActionsPath);
+            var upgradePrefab = AssetDatabase.LoadAssetAtPath<GameObject>(UpgradePrefabPath);
+            if (player == null || treadmill == null || camera == null || actions == null || upgradePrefab == null)
+            {
+                throw new InvalidOperationException(
+                    "Milestone 3C setup requires the saved Treadmill, LocalPlayerMarker, " +
+                    "Main Camera, InputSystem_Actions, and Assets/Game/Prefab/Upgrade .prefab.");
+            }
+
+            var config = EnsureBalanceConfig();
+            var localController = EnsureComponent<LocalPlayerController>(player);
+            var progression = EnsureComponent<PlayerProgression>(player);
+            var rewards = EnsureComponent<PlayerDemoRewards>(player);
+            var upgradeState = EnsureComponent<PlayerUpgradeState>(player);
+            var orbitCamera = EnsureComponent<OrbitCamera>(camera.gameObject);
+            orbitCamera.Configure(actions, player.transform);
+            localController.Configure(actions, orbitCamera, config);
+            progression.Configure(config, localController);
+            upgradeState.Configure(progression, rewards, localController);
+
+            var treadmillZone = EnsureComponent<TreadmillXpZone>(treadmill);
+            var treadmillCollider = treadmill.GetComponent<Collider>();
+            if (treadmillCollider == null)
+            {
+                throw new InvalidOperationException("Treadmill must keep its existing trigger collider.");
+            }
+
+            treadmillCollider.isTrigger = true;
+            treadmillZone.Configure(config.treadmillXpPerSecond);
+
+            var cyan = EnsureMaterial("UpgradeSkinCyan", new Color(0.05f, 0.85f, 1f));
+            var magenta = EnsureMaterial("UpgradeSkinMagenta", new Color(1f, 0.1f, 0.8f));
+            var gold = EnsureMaterial("UpgradeSkinGold", new Color(1f, 0.65f, 0.05f));
+            var upgradesRoot = EnsureObject("Demo Upgrades", null);
+            var firstUpgrade = GameObject.Find("Upgrade 01")
+                ?? GameObject.Find("Upgrade ")
+                ?? GameObject.Find("Upgrade");
+            if (firstUpgrade == null)
+            {
+                throw new InvalidOperationException(
+                    "Milestone 3C setup requires the existing authored Upgrade prefab instance.");
+            }
+
+            ConfigureUpgradeInstance(
+                firstUpgrade,
+                upgradesRoot.transform,
+                new Vector3(-28f, 0.00005f, -29.75465f),
+                "Upgrade 01",
+                "Upgrade01",
+                5,
+                cyan,
+                new Color(0.05f, 0.85f, 1f));
+
+            var secondUpgrade = FindChild(upgradesRoot.transform, "Upgrade 02")?.gameObject;
+            if (secondUpgrade == null)
+            {
+                secondUpgrade = (GameObject)PrefabUtility.InstantiatePrefab(upgradePrefab, scene);
+            }
+
+            ConfigureUpgradeInstance(
+                secondUpgrade,
+                upgradesRoot.transform,
+                new Vector3(-18f, 0.00005f, -29.75465f),
+                "Upgrade 02",
+                "Upgrade02",
+                25,
+                magenta,
+                new Color(1f, 0.1f, 0.8f));
+
+            var thirdUpgrade = FindChild(upgradesRoot.transform, "Upgrade 03")?.gameObject;
+            if (thirdUpgrade == null)
+            {
+                thirdUpgrade = (GameObject)PrefabUtility.InstantiatePrefab(upgradePrefab, scene);
+            }
+
+            ConfigureUpgradeInstance(
+                thirdUpgrade,
+                upgradesRoot.transform,
+                new Vector3(-8f, 0.00005f, -29.75465f),
+                "Upgrade 03",
+                "Upgrade03",
+                75,
+                gold,
+                new Color(1f, 0.65f, 0.05f));
+
+            foreach (var platform in UnityEngine.Object.FindObjectsByType<CoursePlatform>(
+                         FindObjectsInactive.Include,
+                         FindObjectsSortMode.None))
+            {
+                platform.RefreshPointText();
+                EditorUtility.SetDirty(platform);
+            }
+
+            EditorUtility.SetDirty(player);
+            EditorUtility.SetDirty(treadmill);
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene, GameplayScenePath);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            Debug.Log("Spider Swing Milestone 3C training, upgrades, and point labels setup completed.");
         }
 
         [MenuItem("Spider Swing/Repair Platform Script References")]
@@ -220,6 +363,13 @@ namespace SpiderSwing.Editor
             config.sideDeathX = 45f;
             config.deathY = -20f;
             config.maximumY = 60f;
+            config.maximumLevel = 10;
+            config.xpMultiplier = 1f;
+            config.baseXpToNextLevel = 100f;
+            config.movementSpeedPerLevel = 0.75f;
+            config.swingForwardMultiplierPerLevel = 0.15f;
+            config.extraSwingEveryLevels = 2;
+            config.treadmillXpPerSecond = 10f;
             EditorUtility.SetDirty(config);
             return config;
         }
@@ -321,6 +471,48 @@ namespace SpiderSwing.Editor
 
                 previousPlatformEndZ = rootCollider.bounds.max.z;
             }
+        }
+
+        private static void ConfigureUpgradeInstance(
+            GameObject upgrade,
+            Transform parent,
+            Vector3 position,
+            string objectName,
+            string upgradeId,
+            int cost,
+            Material skinMaterial,
+            Color labelColor)
+        {
+            upgrade.name = objectName;
+            upgrade.transform.SetParent(parent, true);
+            upgrade.transform.SetPositionAndRotation(position, Quaternion.identity);
+
+            var collider = EnsureComponent<BoxCollider>(upgrade);
+            collider.isTrigger = true;
+            collider.enabled = true;
+
+            var pad = EnsureComponent<UpgradePad>(upgrade);
+            pad.Configure(upgradeId, cost, 2f, 3, skinMaterial, labelColor);
+            PrefabUtility.RecordPrefabInstancePropertyModifications(upgrade);
+            EditorUtility.SetDirty(upgrade);
+        }
+
+        private static Material EnsureMaterial(string materialName, Color color)
+        {
+            var path = $"{UpgradeMaterialFolder}/{materialName}.mat";
+            var material = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (material == null)
+            {
+                material = new Material(Shader.Find("Standard"))
+                {
+                    name = materialName,
+                };
+                AssetDatabase.CreateAsset(material, path);
+            }
+
+            material.color = color;
+            EditorUtility.SetDirty(material);
+            return material;
         }
 
         private static Transform FindChild(Transform root, string childName)

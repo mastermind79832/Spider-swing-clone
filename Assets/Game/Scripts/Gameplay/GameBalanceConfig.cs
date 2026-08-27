@@ -40,6 +40,9 @@ namespace SpiderSwing.Gameplay
         [Min(0f)] public float swingForwardMultiplierPerLevel = 0.15f;
         [Min(1)] public int extraSwingEveryLevels = 2;
 
+        [Header("Training")]
+        [Min(0f)] public float treadmillXpPerSecond = 10f;
+
         private void OnValidate()
         {
             gravity = -Mathf.Abs(gravity);
@@ -55,6 +58,7 @@ namespace SpiderSwing.Gameplay
             movementSpeedPerLevel = Mathf.Max(0f, movementSpeedPerLevel);
             swingForwardMultiplierPerLevel = Mathf.Max(0f, swingForwardMultiplierPerLevel);
             extraSwingEveryLevels = Mathf.Max(1, extraSwingEveryLevels);
+            treadmillXpPerSecond = Mathf.Max(0f, treadmillXpPerSecond);
         }
     }
 

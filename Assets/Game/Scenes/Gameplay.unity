@@ -183,67 +183,27 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6122337805656735844, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: platformId
+      value: P13
+      objectReference: {fileID: 0}
+    - target: {fileID: 6122337805656735844, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: returnReward
+      value: 13
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 1826785527682989708, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 23927715}
-    - targetCorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 23927714}
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
 --- !u!4 &23927710 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1941104716937081296, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
   m_PrefabInstance: {fileID: 23927709}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &23927711 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5684643688820835580, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 23927709}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &23927712 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 23927709}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &23927713 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 23927709}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &23927714
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 23927712}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05f73e5611b049869e38ee0415114722, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CourseReturnPoint
-  platform: {fileID: 23927715}
-  rewardValue: 13
---- !u!114 &23927715
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 23927713}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a8e05fa4c3645c796e33cc56def7768, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CoursePlatform
-  platformId: P13
-  savePoint: {fileID: 23927711}
-  returnPoint: {fileID: 23927714}
-  returnReward: 13
 --- !u!21 &54948833
 Material:
   serializedVersion: 8
@@ -349,67 +309,27 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6122337805656735844, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: platformId
+      value: P15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6122337805656735844, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: returnReward
+      value: 15
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 1826785527682989708, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 55809524}
-    - targetCorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 55809523}
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
 --- !u!4 &55809519 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1941104716937081296, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
   m_PrefabInstance: {fileID: 55809518}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &55809520 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5684643688820835580, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 55809518}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &55809521 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 55809518}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &55809522 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 55809518}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &55809523
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 55809521}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05f73e5611b049869e38ee0415114722, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CourseReturnPoint
-  platform: {fileID: 55809524}
-  rewardValue: 15
---- !u!114 &55809524
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 55809522}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a8e05fa4c3645c796e33cc56def7768, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CoursePlatform
-  platformId: P15
-  savePoint: {fileID: 55809520}
-  returnPoint: {fileID: 55809523}
-  returnReward: 15
 --- !u!1 &117212798
 GameObject:
   m_ObjectHideFlags: 0
@@ -430,6 +350,8 @@ GameObject:
   - component: {fileID: 117212808}
   - component: {fileID: 117212809}
   - component: {fileID: 117212810}
+  - component: {fileID: 117212811}
+  - component: {fileID: 117212812}
   m_Layer: 0
   m_Name: LocalPlayerMarker
   m_TagString: Untagged
@@ -555,6 +477,7 @@ MonoBehaviour:
   deathController: {fileID: 117212805}
   checkpointProgress: {fileID: 117212807}
   demoRewards: {fileID: 117212810}
+  progression: {fileID: 117212811}
   webLine: {fileID: 117212806}
   webOrigin: {fileID: 0}
 --- !u!143 &117212804
@@ -755,6 +678,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf33e25ee813f2241b50e2cf3003282e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.PlayerDemoRewards
+--- !u!114 &117212811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 117212798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6de2bcfef4bc4935b3d10dfec5cfe5a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.PlayerProgression
+  balanceConfig: {fileID: 11400000, guid: 7dc1790fb764fd148a05298d1d68ee6e, type: 2}
+  playerController: {fileID: 117212803}
+--- !u!114 &117212812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 117212798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66c113d10a0b9ff4cad2849d0c6fc403, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.PlayerUpgradeState
 --- !u!1001 &169419458
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -819,67 +768,27 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6122337805656735844, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: platformId
+      value: P14
+      objectReference: {fileID: 0}
+    - target: {fileID: 6122337805656735844, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: returnReward
+      value: 14
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 1826785527682989708, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 169419464}
-    - targetCorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 169419463}
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
 --- !u!4 &169419459 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1941104716937081296, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
   m_PrefabInstance: {fileID: 169419458}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &169419460 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5684643688820835580, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 169419458}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &169419461 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 169419458}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &169419462 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 169419458}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &169419463
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 169419461}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05f73e5611b049869e38ee0415114722, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CourseReturnPoint
-  platform: {fileID: 169419464}
-  rewardValue: 14
---- !u!114 &169419464
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 169419462}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a8e05fa4c3645c796e33cc56def7768, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CoursePlatform
-  platformId: P14
-  savePoint: {fileID: 169419460}
-  returnPoint: {fileID: 169419463}
-  returnReward: 14
 --- !u!1 &225607571
 GameObject:
   m_ObjectHideFlags: 0
@@ -931,6 +840,275 @@ Transform:
   - {fileID: 1377226111}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &246776500
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 246776504}
+  - component: {fileID: 246776503}
+  - component: {fileID: 246776502}
+  - component: {fileID: 246776501}
+  - component: {fileID: 246776505}
+  m_Layer: 0
+  m_Name: Treadmill
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!65 &246776501
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 246776500}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &246776502
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 246776500}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &246776503
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 246776500}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &246776504
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 246776500}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 10.49073, y: 0.00005, z: -29.75465}
+  m_LocalScale: {x: 11.244827, y: 1, z: 13.3653345}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &246776505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 246776500}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8685647ba00bb6949905ed27f9fd17ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.TreadmillXpZone
+  rawXpPerSecond: 10
+--- !u!1001 &276808495
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1950389264}
+    m_Modifications:
+    - target: {fileID: 2329840175585825861, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_text
+      value: '75 points
+
+        x2 xp
+
+        +3 swings'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2329840175585825861, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_fontSize
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2329840175585825861, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_fontColor.b
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 2329840175585825861, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_fontColor.g
+      value: 0.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 2329840175585825861, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4279084799
+      objectReference: {fileID: 0}
+    - target: {fileID: 3232759610988580097, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_Name
+      value: Upgrade 03
+      objectReference: {fileID: 0}
+    - target: {fileID: 4848726924165399931, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: abbea83ce907fcf468d4d17672d47fa8, type: 2}
+    - target: {fileID: 6133423687909520818, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6133423687909520818, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.00005
+      objectReference: {fileID: 0}
+    - target: {fileID: 6133423687909520818, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -29.75465
+      objectReference: {fileID: 0}
+    - target: {fileID: 6133423687909520818, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6133423687909520818, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6133423687909520818, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6133423687909520818, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6133423687909520818, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6133423687909520818, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6133423687909520818, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3232759610988580097, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 276808501}
+    - targetCorrespondingSourceObject: {fileID: 7171995150716920260, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+  m_SourcePrefab: {fileID: 100100000, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+--- !u!4 &276808496 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6133423687909520818, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+  m_PrefabInstance: {fileID: 276808495}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &276808497 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2329840175585825861, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+  m_PrefabInstance: {fileID: 276808495}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9541d86e2fd84c1d9990edf0852d74ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshPro
+--- !u!23 &276808498 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 4848726924165399931, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+  m_PrefabInstance: {fileID: 276808495}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &276808499 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3232759610988580097, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+  m_PrefabInstance: {fileID: 276808495}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &276808500 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 5683657949773478145, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+  m_PrefabInstance: {fileID: 276808495}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &276808501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 276808499}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63df1ce5125fca447893648a0cabcfdd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.UpgradePad
+  upgradeId: Upgrade03
+  cost: 75
+  xpMultiplier: 2
+  extraSwings: 3
+  playerSkinMaterial: {fileID: 2100000, guid: abbea83ce907fcf468d4d17672d47fa8, type: 2}
+  labelColor: {r: 1, g: 0.65, b: 0.05, a: 1}
+  floorRenderer: {fileID: 276808500}
+  playerSkinRenderer: {fileID: 276808498}
+  valueText: {fileID: 276808497}
 --- !u!1001 &301742526
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -995,35 +1173,37 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6122337805656735844, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: platformId
+      value: P09
+      objectReference: {fileID: 0}
+    - target: {fileID: 6122337805656735844, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: returnReward
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 7159570163018781836, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: m_text
+      value: 1 point
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 301742532}
     - targetCorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
       insertIndex: -1
       addedObject: {fileID: 301742531}
+    - targetCorrespondingSourceObject: {fileID: 1826785527682989708, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
 --- !u!4 &301742527 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1941104716937081296, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
   m_PrefabInstance: {fileID: 301742526}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &301742528 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5684643688820835580, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 301742526}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &301742529 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 301742526}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &301742530 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
   m_PrefabInstance: {fileID: 301742526}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &301742531
@@ -1038,24 +1218,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05f73e5611b049869e38ee0415114722, type: 3}
   m_Name: 
   m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CourseReturnPoint
-  platform: {fileID: 301742532}
+  platform: {fileID: 0}
   rewardValue: 9
---- !u!114 &301742532
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 301742530}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a8e05fa4c3645c796e33cc56def7768, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CoursePlatform
-  platformId: P09
-  savePoint: {fileID: 301742528}
-  returnPoint: {fileID: 301742531}
-  returnReward: 9
 --- !u!1001 &385119284
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1120,67 +1284,27 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6122337805656735844, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: platformId
+      value: P07
+      objectReference: {fileID: 0}
+    - target: {fileID: 6122337805656735844, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: returnReward
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 1826785527682989708, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 385119290}
-    - targetCorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 385119289}
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
 --- !u!4 &385119285 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1941104716937081296, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
   m_PrefabInstance: {fileID: 385119284}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &385119286 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5684643688820835580, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 385119284}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &385119287 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 385119284}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &385119288 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 385119284}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &385119289
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 385119287}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05f73e5611b049869e38ee0415114722, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CourseReturnPoint
-  platform: {fileID: 385119290}
-  rewardValue: 7
---- !u!114 &385119290
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 385119288}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a8e05fa4c3645c796e33cc56def7768, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CoursePlatform
-  platformId: P07
-  savePoint: {fileID: 385119286}
-  returnPoint: {fileID: 385119289}
-  returnReward: 7
 --- !u!1 &476544307
 GameObject:
   m_ObjectHideFlags: 0
@@ -1295,67 +1419,27 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6122337805656735844, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: platformId
+      value: P12
+      objectReference: {fileID: 0}
+    - target: {fileID: 6122337805656735844, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: returnReward
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 1826785527682989708, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 613106633}
-    - targetCorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 613106632}
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
 --- !u!4 &613106628 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1941104716937081296, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
   m_PrefabInstance: {fileID: 613106627}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &613106629 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5684643688820835580, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 613106627}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &613106630 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 613106627}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &613106631 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 613106627}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &613106632
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 613106630}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05f73e5611b049869e38ee0415114722, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CourseReturnPoint
-  platform: {fileID: 613106633}
-  rewardValue: 12
---- !u!114 &613106633
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 613106631}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a8e05fa4c3645c796e33cc56def7768, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CoursePlatform
-  platformId: P12
-  savePoint: {fileID: 613106629}
-  returnPoint: {fileID: 613106632}
-  returnReward: 12
 --- !u!1001 &663068507
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1420,67 +1504,27 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6122337805656735844, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: platformId
+      value: P17
+      objectReference: {fileID: 0}
+    - target: {fileID: 6122337805656735844, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: returnReward
+      value: 17
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 1826785527682989708, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 663068513}
-    - targetCorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 663068512}
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
 --- !u!4 &663068508 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1941104716937081296, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
   m_PrefabInstance: {fileID: 663068507}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &663068509 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5684643688820835580, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 663068507}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &663068510 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 663068507}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &663068511 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 663068507}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &663068512
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 663068510}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05f73e5611b049869e38ee0415114722, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CourseReturnPoint
-  platform: {fileID: 663068513}
-  rewardValue: 17
---- !u!114 &663068513
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 663068511}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a8e05fa4c3645c796e33cc56def7768, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CoursePlatform
-  platformId: P17
-  savePoint: {fileID: 663068509}
-  returnPoint: {fileID: 663068512}
-  returnReward: 17
 --- !u!1001 &668164819
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1492,18 +1536,6 @@ PrefabInstance:
     - target: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
       propertyPath: m_Name
       value: P01
-      objectReference: {fileID: 0}
-    - target: {fileID: 1941104716937081296, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 60
-      objectReference: {fileID: 0}
-    - target: {fileID: 1941104716937081296, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 1941104716937081296, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 1941104716937081296, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1549,63 +1581,15 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 1826785527682989708, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 668164825}
-    - targetCorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 668164824}
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
 --- !u!4 &668164820 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1941104716937081296, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
   m_PrefabInstance: {fileID: 668164819}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &668164821 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5684643688820835580, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 668164819}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &668164822 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 668164819}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &668164823 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 668164819}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &668164824
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 668164822}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05f73e5611b049869e38ee0415114722, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CourseReturnPoint
-  platform: {fileID: 668164825}
-  rewardValue: 1
---- !u!114 &668164825
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 668164823}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a8e05fa4c3645c796e33cc56def7768, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CoursePlatform
-  platformId: P01
-  savePoint: {fileID: 668164821}
-  returnPoint: {fileID: 668164824}
-  returnReward: 1
 --- !u!1 &840742301
 GameObject:
   m_ObjectHideFlags: 0
@@ -1704,6 +1688,149 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.SwingForbiddenZone
   zoneCollider: {fileID: 887932914}
+--- !u!1001 &957313249
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1950389264}
+    m_Modifications:
+    - target: {fileID: 2329840175585825861, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_text
+      value: '25 points
+
+        x2 xp
+
+        +3 swings'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2329840175585825861, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_fontSize
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2329840175585825861, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_fontColor.b
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2329840175585825861, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_fontColor.g
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2329840175585825861, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4291566335
+      objectReference: {fileID: 0}
+    - target: {fileID: 3232759610988580097, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_Name
+      value: Upgrade 02
+      objectReference: {fileID: 0}
+    - target: {fileID: 4848726924165399931, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 78311029245da0c45a817ee07051c91b, type: 2}
+    - target: {fileID: 6133423687909520818, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -18
+      objectReference: {fileID: 0}
+    - target: {fileID: 6133423687909520818, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.00005
+      objectReference: {fileID: 0}
+    - target: {fileID: 6133423687909520818, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -29.75465
+      objectReference: {fileID: 0}
+    - target: {fileID: 6133423687909520818, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6133423687909520818, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6133423687909520818, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6133423687909520818, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6133423687909520818, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6133423687909520818, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6133423687909520818, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3232759610988580097, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 957313255}
+    - targetCorrespondingSourceObject: {fileID: 7171995150716920260, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+  m_SourcePrefab: {fileID: 100100000, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+--- !u!4 &957313250 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6133423687909520818, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+  m_PrefabInstance: {fileID: 957313249}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &957313251 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2329840175585825861, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+  m_PrefabInstance: {fileID: 957313249}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9541d86e2fd84c1d9990edf0852d74ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshPro
+--- !u!23 &957313252 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 4848726924165399931, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+  m_PrefabInstance: {fileID: 957313249}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &957313253 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3232759610988580097, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+  m_PrefabInstance: {fileID: 957313249}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &957313254 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 5683657949773478145, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+  m_PrefabInstance: {fileID: 957313249}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &957313255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 957313253}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63df1ce5125fca447893648a0cabcfdd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.UpgradePad
+  upgradeId: Upgrade02
+  cost: 25
+  xpMultiplier: 2
+  extraSwings: 3
+  playerSkinMaterial: {fileID: 2100000, guid: 78311029245da0c45a817ee07051c91b, type: 2}
+  labelColor: {r: 1, g: 0.1, b: 0.8, a: 1}
+  floorRenderer: {fileID: 957313254}
+  playerSkinRenderer: {fileID: 957313252}
+  valueText: {fileID: 957313251}
 --- !u!1001 &979788978
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1768,67 +1895,27 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6122337805656735844, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: platformId
+      value: P18
+      objectReference: {fileID: 0}
+    - target: {fileID: 6122337805656735844, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: returnReward
+      value: 18
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 1826785527682989708, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 979788984}
-    - targetCorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 979788983}
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
 --- !u!4 &979788979 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1941104716937081296, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
   m_PrefabInstance: {fileID: 979788978}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &979788980 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5684643688820835580, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 979788978}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &979788981 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 979788978}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &979788982 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 979788978}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &979788983
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 979788981}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05f73e5611b049869e38ee0415114722, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CourseReturnPoint
-  platform: {fileID: 979788984}
-  rewardValue: 18
---- !u!114 &979788984
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 979788982}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a8e05fa4c3645c796e33cc56def7768, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CoursePlatform
-  platformId: P18
-  savePoint: {fileID: 979788980}
-  returnPoint: {fileID: 979788983}
-  returnReward: 18
 --- !u!1001 &1005084249
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1893,67 +1980,27 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6122337805656735844, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: platformId
+      value: P11
+      objectReference: {fileID: 0}
+    - target: {fileID: 6122337805656735844, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: returnReward
+      value: 11
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 1826785527682989708, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1005084255}
-    - targetCorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1005084254}
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
 --- !u!4 &1005084250 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1941104716937081296, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
   m_PrefabInstance: {fileID: 1005084249}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1005084251 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5684643688820835580, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 1005084249}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1005084252 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 1005084249}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1005084253 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 1005084249}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1005084254
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1005084252}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05f73e5611b049869e38ee0415114722, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CourseReturnPoint
-  platform: {fileID: 1005084255}
-  rewardValue: 11
---- !u!114 &1005084255
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1005084253}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a8e05fa4c3645c796e33cc56def7768, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CoursePlatform
-  platformId: P11
-  savePoint: {fileID: 1005084251}
-  returnPoint: {fileID: 1005084254}
-  returnReward: 11
 --- !u!1 &1028712880
 GameObject:
   m_ObjectHideFlags: 0
@@ -2130,35 +2177,37 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6122337805656735844, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: platformId
+      value: P05
+      objectReference: {fileID: 0}
+    - target: {fileID: 6122337805656735844, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: returnReward
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7159570163018781836, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: m_text
+      value: 5 points
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1038930238}
     - targetCorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1038930237}
+    - targetCorrespondingSourceObject: {fileID: 1826785527682989708, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
 --- !u!4 &1038930233 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1941104716937081296, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
   m_PrefabInstance: {fileID: 1038930232}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1038930234 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5684643688820835580, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 1038930232}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1038930235 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 1038930232}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1038930236 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
   m_PrefabInstance: {fileID: 1038930232}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &1038930237
@@ -2173,24 +2222,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05f73e5611b049869e38ee0415114722, type: 3}
   m_Name: 
   m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CourseReturnPoint
-  platform: {fileID: 1038930238}
+  platform: {fileID: 0}
   rewardValue: 5
---- !u!114 &1038930238
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1038930236}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a8e05fa4c3645c796e33cc56def7768, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CoursePlatform
-  platformId: P05
-  savePoint: {fileID: 1038930234}
-  returnPoint: {fileID: 1038930237}
-  returnReward: 5
 --- !u!1 &1117744555
 GameObject:
   m_ObjectHideFlags: 0
@@ -2367,67 +2400,27 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6122337805656735844, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: platformId
+      value: P16
+      objectReference: {fileID: 0}
+    - target: {fileID: 6122337805656735844, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: returnReward
+      value: 16
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 1826785527682989708, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1125964782}
-    - targetCorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1125964781}
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
 --- !u!4 &1125964777 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1941104716937081296, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
   m_PrefabInstance: {fileID: 1125964776}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1125964778 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5684643688820835580, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 1125964776}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1125964779 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 1125964776}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1125964780 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 1125964776}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1125964781
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1125964779}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05f73e5611b049869e38ee0415114722, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CourseReturnPoint
-  platform: {fileID: 1125964782}
-  rewardValue: 16
---- !u!114 &1125964782
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1125964780}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a8e05fa4c3645c796e33cc56def7768, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CoursePlatform
-  platformId: P16
-  savePoint: {fileID: 1125964778}
-  returnPoint: {fileID: 1125964781}
-  returnReward: 16
 --- !u!1001 &1294807274
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2492,67 +2485,27 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6122337805656735844, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: platformId
+      value: P06
+      objectReference: {fileID: 0}
+    - target: {fileID: 6122337805656735844, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: returnReward
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 1826785527682989708, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1294807280}
-    - targetCorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1294807279}
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
 --- !u!4 &1294807275 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1941104716937081296, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
   m_PrefabInstance: {fileID: 1294807274}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1294807276 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5684643688820835580, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 1294807274}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1294807277 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 1294807274}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1294807278 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 1294807274}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1294807279
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1294807277}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05f73e5611b049869e38ee0415114722, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CourseReturnPoint
-  platform: {fileID: 1294807280}
-  rewardValue: 6
---- !u!114 &1294807280
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1294807278}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a8e05fa4c3645c796e33cc56def7768, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CoursePlatform
-  platformId: P06
-  savePoint: {fileID: 1294807276}
-  returnPoint: {fileID: 1294807279}
-  returnReward: 6
 --- !u!1001 &1363294652
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2617,67 +2570,27 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6122337805656735844, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: platformId
+      value: P19
+      objectReference: {fileID: 0}
+    - target: {fileID: 6122337805656735844, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: returnReward
+      value: 19
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 1826785527682989708, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1363294658}
-    - targetCorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1363294657}
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
 --- !u!4 &1363294653 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1941104716937081296, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
   m_PrefabInstance: {fileID: 1363294652}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1363294654 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5684643688820835580, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 1363294652}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1363294655 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 1363294652}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1363294656 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 1363294652}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1363294657
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1363294655}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05f73e5611b049869e38ee0415114722, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CourseReturnPoint
-  platform: {fileID: 1363294658}
-  rewardValue: 19
---- !u!114 &1363294658
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1363294656}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a8e05fa4c3645c796e33cc56def7768, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CoursePlatform
-  platformId: P19
-  savePoint: {fileID: 1363294654}
-  returnPoint: {fileID: 1363294657}
-  returnReward: 19
 --- !u!1001 &1377226110
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2742,35 +2655,37 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6122337805656735844, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: platformId
+      value: P20
+      objectReference: {fileID: 0}
+    - target: {fileID: 6122337805656735844, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: returnReward
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7159570163018781836, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: m_text
+      value: 20 points
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1377226116}
     - targetCorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1377226115}
+    - targetCorrespondingSourceObject: {fileID: 1826785527682989708, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
 --- !u!4 &1377226111 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1941104716937081296, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
   m_PrefabInstance: {fileID: 1377226110}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1377226112 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5684643688820835580, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 1377226110}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1377226113 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 1377226110}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1377226114 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
   m_PrefabInstance: {fileID: 1377226110}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &1377226115
@@ -2785,24 +2700,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05f73e5611b049869e38ee0415114722, type: 3}
   m_Name: 
   m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CourseReturnPoint
-  platform: {fileID: 1377226116}
+  platform: {fileID: 0}
   rewardValue: 20
---- !u!114 &1377226116
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1377226114}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a8e05fa4c3645c796e33cc56def7768, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CoursePlatform
-  platformId: P20
-  savePoint: {fileID: 1377226112}
-  returnPoint: {fileID: 1377226115}
-  returnReward: 20
 --- !u!1001 &1491323121
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2867,35 +2766,33 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6122337805656735844, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: platformId
+      value: P03
+      objectReference: {fileID: 0}
+    - target: {fileID: 6122337805656735844, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: returnReward
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1491323127}
     - targetCorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1491323126}
+    - targetCorrespondingSourceObject: {fileID: 1826785527682989708, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
 --- !u!4 &1491323122 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1941104716937081296, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
   m_PrefabInstance: {fileID: 1491323121}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1491323123 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5684643688820835580, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 1491323121}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1491323124 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 1491323121}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1491323125 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
   m_PrefabInstance: {fileID: 1491323121}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &1491323126
@@ -2910,24 +2807,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05f73e5611b049869e38ee0415114722, type: 3}
   m_Name: 
   m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CourseReturnPoint
-  platform: {fileID: 1491323127}
+  platform: {fileID: 0}
   rewardValue: 3
---- !u!114 &1491323127
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1491323125}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a8e05fa4c3645c796e33cc56def7768, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CoursePlatform
-  platformId: P03
-  savePoint: {fileID: 1491323123}
-  returnPoint: {fileID: 1491323126}
-  returnReward: 3
 --- !u!1 &1600489593
 GameObject:
   m_ObjectHideFlags: 0
@@ -3095,35 +2976,37 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6122337805656735844, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: platformId
+      value: P04
+      objectReference: {fileID: 0}
+    - target: {fileID: 6122337805656735844, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: returnReward
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7159570163018781836, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: m_text
+      value: 4 points
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1837323431}
     - targetCorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1837323430}
+    - targetCorrespondingSourceObject: {fileID: 1826785527682989708, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
 --- !u!4 &1837323426 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1941104716937081296, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
   m_PrefabInstance: {fileID: 1837323425}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1837323427 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5684643688820835580, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 1837323425}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1837323428 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 1837323425}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1837323429 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
   m_PrefabInstance: {fileID: 1837323425}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &1837323430
@@ -3138,24 +3021,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05f73e5611b049869e38ee0415114722, type: 3}
   m_Name: 
   m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CourseReturnPoint
-  platform: {fileID: 1837323431}
+  platform: {fileID: 0}
   rewardValue: 4
---- !u!114 &1837323431
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1837323429}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a8e05fa4c3645c796e33cc56def7768, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CoursePlatform
-  platformId: P04
-  savePoint: {fileID: 1837323427}
-  returnPoint: {fileID: 1837323430}
-  returnReward: 4
 --- !u!1001 &1863841049
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3220,35 +3087,37 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6122337805656735844, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: platformId
+      value: P08
+      objectReference: {fileID: 0}
+    - target: {fileID: 6122337805656735844, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: returnReward
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7159570163018781836, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: m_text
+      value: 8 points
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1863841055}
     - targetCorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1863841054}
+    - targetCorrespondingSourceObject: {fileID: 1826785527682989708, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
 --- !u!4 &1863841050 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1941104716937081296, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
   m_PrefabInstance: {fileID: 1863841049}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1863841051 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5684643688820835580, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 1863841049}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1863841052 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 1863841049}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1863841053 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
   m_PrefabInstance: {fileID: 1863841049}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &1863841054
@@ -3263,24 +3132,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05f73e5611b049869e38ee0415114722, type: 3}
   m_Name: 
   m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CourseReturnPoint
-  platform: {fileID: 1863841055}
+  platform: {fileID: 0}
   rewardValue: 8
---- !u!114 &1863841055
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1863841053}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a8e05fa4c3645c796e33cc56def7768, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CoursePlatform
-  platformId: P08
-  savePoint: {fileID: 1863841051}
-  returnPoint: {fileID: 1863841054}
-  returnReward: 8
 --- !u!1 &1909130504
 GameObject:
   m_ObjectHideFlags: 0
@@ -3393,6 +3246,40 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1950389263
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1950389264}
+  m_Layer: 0
+  m_Name: Demo Upgrades
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1950389264
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1950389263}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7477795079069931183}
+  - {fileID: 957313250}
+  - {fileID: 276808496}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2015655124
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3457,67 +3344,27 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6122337805656735844, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: platformId
+      value: P10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6122337805656735844, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: returnReward
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 1826785527682989708, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2015655130}
-    - targetCorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2015655129}
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
 --- !u!4 &2015655125 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1941104716937081296, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
   m_PrefabInstance: {fileID: 2015655124}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &2015655126 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5684643688820835580, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 2015655124}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &2015655127 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 2015655124}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &2015655128 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 2015655124}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &2015655129
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2015655127}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05f73e5611b049869e38ee0415114722, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CourseReturnPoint
-  platform: {fileID: 2015655130}
-  rewardValue: 10
---- !u!114 &2015655130
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2015655128}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a8e05fa4c3645c796e33cc56def7768, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CoursePlatform
-  platformId: P10
-  savePoint: {fileID: 2015655126}
-  returnPoint: {fileID: 2015655129}
-  returnReward: 10
 --- !u!1 &2026695862
 GameObject:
   m_ObjectHideFlags: 0
@@ -3679,35 +3526,37 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6122337805656735844, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: platformId
+      value: P02
+      objectReference: {fileID: 0}
+    - target: {fileID: 6122337805656735844, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: returnReward
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7159570163018781836, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      propertyPath: m_text
+      value: 1 point
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2095913325}
     - targetCorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2095913324}
+    - targetCorrespondingSourceObject: {fileID: 1826785527682989708, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
 --- !u!4 &2095913320 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1941104716937081296, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
   m_PrefabInstance: {fileID: 2095913319}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &2095913321 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5684643688820835580, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 2095913319}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2095913322 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2766577722125405059, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
-  m_PrefabInstance: {fileID: 2095913319}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &2095913323 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1611809044114878390, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
   m_PrefabInstance: {fileID: 2095913319}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &2095913324
@@ -3722,24 +3571,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05f73e5611b049869e38ee0415114722, type: 3}
   m_Name: 
   m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CourseReturnPoint
-  platform: {fileID: 2095913325}
+  platform: {fileID: 0}
   rewardValue: 2
---- !u!114 &2095913325
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2095913323}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a8e05fa4c3645c796e33cc56def7768, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CoursePlatform
-  platformId: P02
-  savePoint: {fileID: 2095913321}
-  returnPoint: {fileID: 2095913324}
-  returnReward: 2
 --- !u!1 &2144972621
 GameObject:
   m_ObjectHideFlags: 0
@@ -3852,6 +3685,161 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &7477795079069931182
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1950389264}
+    m_Modifications:
+    - target: {fileID: 2329840175585825861, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_text
+      value: '5 points
+
+        x2 xp
+
+        +3 swings'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2329840175585825861, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_fontSize
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2329840175585825861, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_margin.y
+      value: -2.7742043
+      objectReference: {fileID: 0}
+    - target: {fileID: 2329840175585825861, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_fontColor.g
+      value: 0.85
+      objectReference: {fileID: 0}
+    - target: {fileID: 2329840175585825861, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_fontColor.r
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 2329840175585825861, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2329840175585825861, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_enableAutoSizing
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2329840175585825861, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4294957325
+      objectReference: {fileID: 0}
+    - target: {fileID: 3232759610988580097, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_Name
+      value: Upgrade 01
+      objectReference: {fileID: 0}
+    - target: {fileID: 4848726924165399931, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 31ae4e2b6538a004b8ea9f4b9a521dfc, type: 2}
+    - target: {fileID: 6133423687909520818, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -28
+      objectReference: {fileID: 0}
+    - target: {fileID: 6133423687909520818, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.00005
+      objectReference: {fileID: 0}
+    - target: {fileID: 6133423687909520818, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -29.75465
+      objectReference: {fileID: 0}
+    - target: {fileID: 6133423687909520818, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6133423687909520818, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6133423687909520818, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6133423687909520818, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6133423687909520818, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6133423687909520818, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6133423687909520818, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3232759610988580097, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7477795079069931188}
+    - targetCorrespondingSourceObject: {fileID: 7171995150716920260, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+  m_SourcePrefab: {fileID: 100100000, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+--- !u!4 &7477795079069931183 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6133423687909520818, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+  m_PrefabInstance: {fileID: 7477795079069931182}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7477795079069931184 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2329840175585825861, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+  m_PrefabInstance: {fileID: 7477795079069931182}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9541d86e2fd84c1d9990edf0852d74ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshPro
+--- !u!23 &7477795079069931185 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 4848726924165399931, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+  m_PrefabInstance: {fileID: 7477795079069931182}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7477795079069931186 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3232759610988580097, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+  m_PrefabInstance: {fileID: 7477795079069931182}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &7477795079069931187 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 5683657949773478145, guid: 8066ace9e551d8c4181e0b9e4de70dc6, type: 3}
+  m_PrefabInstance: {fileID: 7477795079069931182}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7477795079069931188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7477795079069931186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63df1ce5125fca447893648a0cabcfdd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.UpgradePad
+  upgradeId: Upgrade01
+  cost: 5
+  xpMultiplier: 2
+  extraSwings: 3
+  playerSkinMaterial: {fileID: 2100000, guid: 31ae4e2b6538a004b8ea9f4b9a521dfc, type: 2}
+  labelColor: {r: 0.05, g: 0.85, b: 1, a: 1}
+  floorRenderer: {fileID: 7477795079069931187}
+  playerSkinRenderer: {fileID: 7477795079069931185}
+  valueText: {fileID: 7477795079069931184}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -3867,3 +3855,5 @@ SceneRoots:
   - {fileID: 225607572}
   - {fileID: 840742302}
   - {fileID: 887932912}
+  - {fileID: 246776504}
+  - {fileID: 1950389264}

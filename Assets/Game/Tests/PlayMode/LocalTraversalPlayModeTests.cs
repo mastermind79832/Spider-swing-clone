@@ -18,10 +18,14 @@ namespace SpiderSwing.Tests
         private GameObject secondPlatformObject;
         private GameObject secondSavePointObject;
         private GameObject returnPointObject;
+        private GameObject treadmillObject;
+        private GameObject firstUpgradeObject;
+        private GameObject secondUpgradeObject;
         private InputActionAsset inputActions;
         private GameBalanceConfig balanceConfig;
         private PlayerCheckpointProgress checkpointProgress;
         private PlayerDemoRewards demoRewards;
+        private PlayerProgression progression;
 
         [TearDown]
         public void TearDown()
@@ -34,6 +38,9 @@ namespace SpiderSwing.Tests
             Destroy(secondPlatformObject);
             Destroy(secondSavePointObject);
             Destroy(returnPointObject);
+            Destroy(treadmillObject);
+            Destroy(firstUpgradeObject);
+            Destroy(secondUpgradeObject);
             Destroy(inputActions);
             Destroy(balanceConfig);
 
@@ -66,6 +73,148 @@ namespace SpiderSwing.Tests
             Assert.That(playerObject.transform.position.y, Is.EqualTo(hubObject.transform.position.y).Within(0.15f));
             Assert.That(playerObject.transform.position.z, Is.EqualTo(hubObject.transform.position.z).Within(0.02f));
             Assert.That(localController.IsWebVisible, Is.False);
+        }
+
+        [UnityTest]
+        public IEnumerator TraversalMovementAwardsXpThroughOneSubscription()
+        {
+            CreatePlayer(out var localController);
+
+            typeof(LocalPlayerController)
+                .GetMethod("MoveAndTrack", BindingFlags.Instance | BindingFlags.NonPublic)
+                ?.Invoke(localController, new object[] { Vector3.forward, true });
+            yield return null;
+
+            Assert.That(progression.CurrentXp, Is.GreaterThan(0.01f));
+
+            progression.enabled = false;
+            progression.enabled = true;
+            var beforeSecondMove = progression.CurrentXp;
+            typeof(LocalPlayerController)
+                .GetMethod("MoveAndTrack", BindingFlags.Instance | BindingFlags.NonPublic)
+                ?.Invoke(localController, new object[] { Vector3.forward, true });
+            yield return null;
+
+            var secondAward = progression.CurrentXp - beforeSecondMove;
+            Assert.That(secondAward, Is.GreaterThan(0.1f));
+            Assert.That(secondAward, Is.LessThan(1.5f));
+        }
+
+        [UnityTest]
+        public IEnumerator LevelUpKeepsAFullPlayerAtTheNewMaximum()
+        {
+            CreatePlayer(out var localController);
+
+            progression.AddTraversalDistance(100f);
+
+            Assert.That(progression.Level, Is.EqualTo(2));
+            Assert.That(progression.CurrentXp, Is.EqualTo(0f).Within(0.001f));
+            Assert.That(localController.MoveSpeed, Is.EqualTo(7.75f).Within(0.001f));
+            Assert.That(localController.SwingForwardMultiplier, Is.EqualTo(1.15f).Within(0.001f));
+            Assert.That(localController.MaxSwings, Is.EqualTo(3));
+            Assert.That(localController.CurrentSwings, Is.EqualTo(3));
+            yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator LevelUpDoesNotRefillPartiallySpentSwings()
+        {
+            CreatePlayer(out var localController);
+            SetCurrentSwings(localController, 1);
+
+            progression.AddTraversalDistance(100f);
+
+            Assert.That(progression.Level, Is.EqualTo(2));
+            Assert.That(localController.MaxSwings, Is.EqualTo(3));
+            Assert.That(localController.CurrentSwings, Is.EqualTo(1));
+            yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator TrainingAndStackedUpgradesUseTheSameProgressionState()
+        {
+            CreatePlayer(out var localController);
+            var upgradeState = playerObject.AddComponent<PlayerUpgradeState>();
+            upgradeState.Configure(progression, demoRewards, localController);
+            demoRewards.AwardReturn(25, Vector3.zero);
+            SetCurrentSwings(localController, 1);
+
+            firstUpgradeObject = new GameObject("Upgrade01");
+            secondUpgradeObject = new GameObject("Upgrade02");
+            firstUpgradeObject.AddComponent<BoxCollider>().isTrigger = true;
+            secondUpgradeObject.AddComponent<BoxCollider>().isTrigger = true;
+            var firstPad = firstUpgradeObject.AddComponent<UpgradePad>();
+            var secondPad = secondUpgradeObject.AddComponent<UpgradePad>();
+            firstPad.Configure("Upgrade01", 5, 2f, 3, null, Color.cyan);
+            secondPad.Configure("Upgrade02", 20, 2f, 3, null, Color.magenta);
+
+            Assert.That(upgradeState.TryPurchase(firstPad), Is.True);
+            Assert.That(upgradeState.TryPurchase(secondPad), Is.True);
+            Assert.That(progression.UpgradeXpMultiplier, Is.EqualTo(4f).Within(0.001f));
+            Assert.That(progression.CurrentMaxSwings, Is.EqualTo(8));
+            Assert.That(localController.CurrentSwings, Is.EqualTo(1));
+            Assert.That(upgradeState.TryPurchase(firstPad), Is.False);
+            yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator TreadmillAwardsXpWhileTheLivingPlayerIsInside()
+        {
+            CreatePlayer(out _);
+            treadmillObject = new GameObject("TestTreadmill");
+            var treadmillCollider = treadmillObject.AddComponent<BoxCollider>();
+            treadmillCollider.isTrigger = true;
+            var treadmill = treadmillObject.AddComponent<TreadmillXpZone>();
+            treadmill.Configure(10f);
+
+            typeof(TreadmillXpZone)
+                .GetMethod("OnTriggerEnter", BindingFlags.Instance | BindingFlags.NonPublic)
+                ?.Invoke(treadmill, new object[] { playerObject.GetComponent<CharacterController>() });
+            var before = progression.CurrentXp;
+            typeof(TreadmillXpZone)
+                .GetMethod("Update", BindingFlags.Instance | BindingFlags.NonPublic)
+                ?.Invoke(treadmill, null);
+
+            Assert.That(progression.CurrentXp, Is.GreaterThan(before));
+            yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator DeathAndRespawnPreserveProgressionState()
+        {
+            var deathController = CreatePlayer(out var localController);
+            progression.AddTraversalDistance(125f);
+            var expectedXp = progression.CurrentXp;
+            progression.enabled = false;
+
+            Assert.That(deathController.TryDie(PlayerDeathReason.BottomFloor), Is.True);
+            yield return new WaitForSecondsRealtime(1.1f);
+            progression.enabled = true;
+
+            Assert.That(progression.Level, Is.EqualTo(2));
+            Assert.That(progression.CurrentXp, Is.EqualTo(expectedXp).Within(0.001f));
+            Assert.That(localController.MaxSwings, Is.EqualTo(3));
+            Assert.That(localController.CurrentSwings, Is.EqualTo(3));
+        }
+
+        [UnityTest]
+        public IEnumerator LandingAfterLevelUpRefillsToProgressionMaximum()
+        {
+            CreatePlayer(out var localController);
+            progression.AddTraversalDistance(100f);
+            CreateLandingPlatform(
+                "P01",
+                new Vector3(0f, 0.5f, 10000f),
+                new Vector3(0f, 2f, 10000f),
+                out platformObject,
+                out savePointObject);
+
+            SetCurrentSwings(localController, 0);
+            LandPlayerOnPlatform(localController, playerObject.GetComponent<CharacterController>(), new Vector3(0f, 3f, 10000f));
+            yield return null;
+
+            Assert.That(localController.CurrentSwings, Is.EqualTo(3));
+            Assert.That(localController.CurrentSwings, Is.EqualTo(localController.MaxSwings));
         }
 
         [UnityTest]
@@ -244,6 +393,8 @@ namespace SpiderSwing.Tests
             checkpointProgress = playerObject.AddComponent<PlayerCheckpointProgress>();
             demoRewards = playerObject.AddComponent<PlayerDemoRewards>();
             localController.Configure(inputActions, null, balanceConfig);
+            progression = playerObject.AddComponent<PlayerProgression>();
+            progression.Configure(balanceConfig, localController);
 
             hubObject = new GameObject("TestHubSpawn");
             hubObject.transform.position = new Vector3(0f, 1f, 0f);

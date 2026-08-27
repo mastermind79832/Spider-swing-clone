@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 namespace SpiderSwing.Gameplay
@@ -8,6 +9,7 @@ namespace SpiderSwing.Gameplay
         [SerializeField] private Transform savePoint;
         [SerializeField] private CourseReturnPoint returnPoint;
         [SerializeField] private int returnReward = 1;
+        [SerializeField] private TMP_Text pointText;
 
         public string PlatformId => platformId;
         public Transform SavePoint => savePoint != null ? savePoint : transform;
@@ -17,6 +19,7 @@ namespace SpiderSwing.Gameplay
         public void Configure(string id)
         {
             platformId = string.IsNullOrWhiteSpace(id) ? "Platform" : id;
+            RefreshPointText();
         }
 
         public void Configure(
@@ -29,6 +32,7 @@ namespace SpiderSwing.Gameplay
             savePoint = configuredSavePoint != null ? configuredSavePoint : transform;
             returnPoint = configuredReturnPoint;
             returnReward = Mathf.Max(0, configuredReturnReward);
+            RefreshPointText();
         }
 
         public void Configure(string id, Transform configuredSavePoint, int configuredReturnReward)
@@ -39,6 +43,25 @@ namespace SpiderSwing.Gameplay
         public static bool IsTopLanding(Vector3 normal)
         {
             return normal.y >= 0.7f;
+        }
+
+        public void RefreshPointText()
+        {
+            pointText ??= FindPointText();
+            if (pointText == null)
+            {
+                return;
+            }
+
+            pointText.text = returnReward == 1
+                ? "1 point"
+                : $"{returnReward} points";
+        }
+
+        private TMP_Text FindPointText()
+        {
+            var pointTextObject = transform.Find("point text");
+            return pointTextObject != null ? pointTextObject.GetComponent<TMP_Text>() : null;
         }
     }
 }

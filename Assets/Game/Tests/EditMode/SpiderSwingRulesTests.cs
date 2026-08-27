@@ -7,6 +7,85 @@ namespace SpiderSwing.Tests
     public sealed class SpiderSwingRulesTests
     {
         [Test]
+        public void DistanceXpHonorsTheConfiguredMultiplier()
+        {
+            Assert.That(ProgressionRules.XpFromDistance(12.5f, 1f), Is.EqualTo(12.5f).Within(0.0001f));
+            Assert.That(ProgressionRules.XpFromDistance(12.5f, 2f), Is.EqualTo(25f).Within(0.0001f));
+            Assert.That(ProgressionRules.XpFromDistance(-1f, 2f), Is.EqualTo(0f).Within(0.0001f));
+        }
+
+        [Test]
+        public void RequiredXpUsesTheCurrentLevelMultiplier()
+        {
+            Assert.That(ProgressionRules.RequiredXpForLevel(1, 100f), Is.EqualTo(100f));
+            Assert.That(ProgressionRules.RequiredXpForLevel(5, 100f), Is.EqualTo(500f));
+        }
+
+        [Test]
+        public void XpOverflowCarriesAcrossMultipleLevels()
+        {
+            var result = ProgressionRules.ResolveXp(1, 0f, 350f, 10, 100f);
+
+            Assert.That(result.level, Is.EqualTo(3));
+            Assert.That(result.xp, Is.EqualTo(50f).Within(0.0001f));
+            Assert.That(result.levelsGained, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void MaximumLevelStopsFurtherXpProgression()
+        {
+            var result = ProgressionRules.ResolveXp(10, 25f, 500f, 10, 100f);
+
+            Assert.That(result.level, Is.EqualTo(10));
+            Assert.That(result.xp, Is.EqualTo(0f).Within(0.0001f));
+            Assert.That(result.levelsGained, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void ProgressionStatsMatchTheLockedFastDemoCurve()
+        {
+            Assert.That(ProgressionRules.MoveSpeedForLevel(7f, 1, 0.75f), Is.EqualTo(7f).Within(0.0001f));
+            Assert.That(ProgressionRules.MoveSpeedForLevel(7f, 5, 0.75f), Is.EqualTo(10f).Within(0.0001f));
+            Assert.That(ProgressionRules.MoveSpeedForLevel(7f, 10, 0.75f), Is.EqualTo(13.75f).Within(0.0001f));
+
+            Assert.That(ProgressionRules.SwingMultiplierForLevel(1f, 1, 0.15f), Is.EqualTo(1f).Within(0.0001f));
+            Assert.That(ProgressionRules.SwingMultiplierForLevel(1f, 5, 0.15f), Is.EqualTo(1.6f).Within(0.0001f));
+            Assert.That(ProgressionRules.SwingMultiplierForLevel(1f, 10, 0.15f), Is.EqualTo(2.35f).Within(0.0001f));
+
+            Assert.That(ProgressionRules.MaxSwingsForLevel(2, 1, 2), Is.EqualTo(2));
+            Assert.That(ProgressionRules.MaxSwingsForLevel(2, 5, 2), Is.EqualTo(4));
+            Assert.That(ProgressionRules.MaxSwingsForLevel(2, 10, 2), Is.EqualTo(7));
+        }
+
+        [Test]
+        public void CapacityChangesPreservePartialSwingStockButExpandFullStock()
+        {
+            Assert.That(ProgressionRules.SwingsAfterMaxChange(2, 2, 3), Is.EqualTo(3));
+            Assert.That(ProgressionRules.SwingsAfterMaxChange(1, 2, 3), Is.EqualTo(1));
+            Assert.That(ProgressionRules.SwingsAfterMaxChange(0, 2, 5), Is.EqualTo(0));
+        }
+
+        [Test]
+        public void DemoRewardsSpendOnlyWhenThePlayerCanAffordTheCost()
+        {
+            var rewardsObject = new GameObject("RewardsTest");
+            try
+            {
+                var rewards = rewardsObject.AddComponent<PlayerDemoRewards>();
+                rewards.AwardReturn(5, Vector3.zero);
+
+                Assert.That(rewards.CanAfford(5), Is.True);
+                Assert.That(rewards.TrySpend(5), Is.True);
+                Assert.That(rewards.ReturnPoints, Is.EqualTo(0));
+                Assert.That(rewards.TrySpend(1), Is.False);
+            }
+            finally
+            {
+                Object.DestroyImmediate(rewardsObject);
+            }
+        }
+
+        [Test]
         public void SwingRequiresAirbornePlayerChargeAndPermittedLocation()
         {
             Assert.That(SwingRules.CanStartSwing(false, 1, true, false), Is.True);
