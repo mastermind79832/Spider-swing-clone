@@ -390,23 +390,17 @@ namespace SpiderSwing.Gameplay
                 maxSwings);
         }
 
+        public void ApplyPlayerSkin(Material armMaterial, Material bodyMaterial)
+        {
+            var skinVisual = GetComponent<PlayerSkinVisual>() ?? gameObject.AddComponent<PlayerSkinVisual>();
+            skinVisual?.Apply(armMaterial, bodyMaterial);
+        }
+
+        // Kept for existing editor/test callers. New gameplay should use the
+        // Arm/Body-specific overload so authored model materials remain intact.
         public void ApplyPlayerSkinMaterial(Material skinMaterial)
         {
-            if (skinMaterial == null)
-            {
-                return;
-            }
-
-            var renderers = GetComponentsInChildren<Renderer>(true);
-            foreach (var renderer in renderers)
-            {
-                if (renderer is LineRenderer)
-                {
-                    continue;
-                }
-
-                renderer.sharedMaterial = skinMaterial;
-            }
+            ApplyPlayerSkin(skinMaterial, skinMaterial);
         }
 
         public void ConfigureProgression(PlayerProgression configuredProgression)

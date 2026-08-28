@@ -14,12 +14,11 @@ namespace SpiderSwing.Gameplay
         [SerializeField, Min(0)] private int cost = 5;
         [SerializeField, Min(1f)] private float xpMultiplier = 2f;
         [SerializeField, Min(0)] private int extraSwings = 3;
-        [SerializeField] private Material playerSkinMaterial;
         [SerializeField] private Color labelColor = Color.white;
 
         [Header("Prefab references")]
         [SerializeField] private Renderer floorRenderer;
-        [SerializeField] private Renderer playerSkinRenderer;
+        [SerializeField] private Transform playerPreviewRoot;
         [SerializeField] private TMP_Text valueText;
 
         private PlayerDemoRewards demoRewards;
@@ -30,7 +29,6 @@ namespace SpiderSwing.Gameplay
         public int Cost => cost;
         public float XpMultiplier => xpMultiplier;
         public int ExtraSwings => extraSwings;
-        public Material PlayerSkinMaterial => playerSkinMaterial;
         public bool IsPurchased => purchased;
 
         public void Configure(
@@ -38,18 +36,45 @@ namespace SpiderSwing.Gameplay
             int configuredCost,
             float configuredXpMultiplier,
             int configuredExtraSwings,
-            Material configuredPlayerSkinMaterial,
             Color configuredLabelColor)
         {
             upgradeId = string.IsNullOrWhiteSpace(configuredId) ? "Upgrade" : configuredId;
             cost = Mathf.Max(0, configuredCost);
             xpMultiplier = Mathf.Max(1f, configuredXpMultiplier);
             extraSwings = Mathf.Max(0, configuredExtraSwings);
-            playerSkinMaterial = configuredPlayerSkinMaterial;
             labelColor = configuredLabelColor;
             ResolveReferences();
-            ApplyPrefabVisuals();
             RefreshVisuals();
+        }
+
+        public bool TryGetSkinMaterials(out Material armMaterial, out Material bodyMaterial)
+        {
+            ResolveReferences();
+            if (PlayerSkinVisual.TryGetMaterials(playerPreviewRoot, out armMaterial, out bodyMaterial))
+            {
+                return true;
+            }
+
+            // Imported model hierarchies can put a renderer one level below the
+            // visible Arm/body transform. Prefer any resolved Arm or Body
+            // material, then mirror it to the missing half. Most demo skins use
+            // one shared material for both pieces, so this stays visually correct.
+            armMaterial ??= FindNamedMaterial(playerPreviewRoot, "Arm");
+            bodyMaterial ??= FindNamedMaterial(playerPreviewRoot, "Body");
+            bodyMaterial ??= armMaterial;
+            armMaterial ??= bodyMaterial;
+            if (armMaterial != null && bodyMaterial != null)
+            {
+                return true;
+            }
+
+            // Compatibility only: existing pads retain the old inactive
+            // placeholder while the user transitions to the preview model.
+            // It is never preferred when an authored preview is available.
+            var legacyMaterial = FindChild(transform, "Player skin")?.GetComponent<Renderer>()?.sharedMaterial;
+            armMaterial = legacyMaterial;
+            bodyMaterial = legacyMaterial;
+            return legacyMaterial != null;
         }
 
         public void MarkPurchased()
@@ -81,7 +106,6 @@ namespace SpiderSwing.Gameplay
         private void Awake()
         {
             ResolveReferences();
-            ApplyPrefabVisuals();
         }
 
         private void OnEnable()
@@ -128,17 +152,52 @@ namespace SpiderSwing.Gameplay
         private void ResolveReferences()
         {
             floorRenderer ??= GetComponent<Renderer>();
-            playerSkinRenderer ??= transform.Find("Player skin")?.GetComponent<Renderer>();
+            playerPreviewRoot ??= FindChild(transform, "player");
             valueText ??= transform.Find("value text")?.GetComponent<TMP_Text>();
             demoRewards ??= FindAnyObjectByType<PlayerDemoRewards>();
         }
 
-        private void ApplyPrefabVisuals()
+        private static Transform FindChild(Transform root, string childName)
         {
-            if (playerSkinRenderer != null && playerSkinMaterial != null)
+            if (root == null)
             {
-                playerSkinRenderer.sharedMaterial = playerSkinMaterial;
+                return null;
             }
+
+            if (string.Equals(root.name, childName, System.StringComparison.OrdinalIgnoreCase))
+            {
+                return root;
+            }
+
+            for (var index = 0; index < root.childCount; index++)
+            {
+                var found = FindChild(root.GetChild(index), childName);
+                if (found != null)
+                {
+                    return found;
+                }
+            }
+
+            return null;
+        }
+
+        private static Material FindNamedMaterial(Transform root, string objectName)
+        {
+            if (root == null)
+            {
+                return null;
+            }
+
+            foreach (var renderer in root.GetComponentsInChildren<Renderer>(true))
+            {
+                if (string.Equals(renderer.gameObject.name, objectName, System.StringComparison.OrdinalIgnoreCase)
+                    && renderer.sharedMaterial != null)
+                {
+                    return renderer.sharedMaterial;
+                }
+            }
+
+            return null;
         }
 
         private void SetRendererColor(Renderer target, Color color)

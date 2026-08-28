@@ -15,6 +15,7 @@ namespace SpiderSwing.Gameplay
         public Transform SavePoint => savePoint != null ? savePoint : transform;
         public CourseReturnPoint ReturnPoint => returnPoint;
         public int ReturnReward => returnReward;
+        public TMP_Text PointText => pointText != null ? pointText : FindPointText();
 
         public void Configure(string id)
         {
@@ -47,7 +48,7 @@ namespace SpiderSwing.Gameplay
 
         public void RefreshPointText()
         {
-            pointText ??= FindPointText();
+            pointText = PointText;
             if (pointText == null)
             {
                 return;
@@ -57,6 +58,26 @@ namespace SpiderSwing.Gameplay
                 ? "1 point"
                 : $"{returnReward} points";
         }
+
+        private void Awake()
+        {
+            RefreshPointText();
+        }
+
+        private void OnEnable()
+        {
+            RefreshPointText();
+        }
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (!Application.isPlaying)
+            {
+                RefreshPointText();
+            }
+        }
+#endif
 
         private TMP_Text FindPointText()
         {

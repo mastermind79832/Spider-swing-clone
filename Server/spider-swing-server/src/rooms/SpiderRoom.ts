@@ -12,11 +12,16 @@ interface TransformMessage {
   yaw: number;
 }
 
+interface SkinMessage {
+  skinId: string;
+}
+
 export class SpiderRoom extends Room<SpiderRoomOptions> {
   maxClients = 4;
   private static readonly maxHorizontalCoordinate = 100;
   private static readonly minVerticalCoordinate = -25;
   private static readonly maxVerticalCoordinate = 75;
+  private static readonly allowedSkinIds = new Set(["Default", "Upgrade01", "Upgrade02", "Upgrade03"]);
 
   onCreate() {
     this.setState(new SpiderRoomState());
@@ -35,6 +40,17 @@ export class SpiderRoom extends Room<SpiderRoomOptions> {
       player.y = message.y;
       player.z = message.z;
       player.yaw = ((message.yaw % 360) + 360) % 360;
+    });
+
+    this.onMessage("skin", (client, message: SkinMessage) => {
+      if (!SpiderRoom.isValidSkin(message?.skinId)) {
+        return;
+      }
+
+      const player = this.state.players.get(client.sessionId);
+      if (player !== undefined) {
+        player.skinId = message.skinId;
+      }
     });
   }
 
@@ -75,5 +91,9 @@ export class SpiderRoom extends Room<SpiderRoomOptions> {
       Math.abs(message.z) <= SpiderRoom.maxHorizontalCoordinate &&
       message.y >= SpiderRoom.minVerticalCoordinate &&
       message.y <= SpiderRoom.maxVerticalCoordinate;
+  }
+
+  private static isValidSkin(skinId: unknown): skinId is string {
+    return typeof skinId === "string" && SpiderRoom.allowedSkinIds.has(skinId);
   }
 }

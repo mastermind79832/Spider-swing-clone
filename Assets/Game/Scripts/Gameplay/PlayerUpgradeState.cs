@@ -13,8 +13,13 @@ namespace SpiderSwing.Gameplay
         private PlayerProgression progression;
         private PlayerDemoRewards demoRewards;
         private LocalPlayerController playerController;
+        private PlayerSkinVisual playerSkinVisual;
+        private string currentSkinId = "Default";
 
         public event Action<UpgradePad> OnUpgradePurchased;
+        public event Action<string> OnSkinChanged;
+
+        public string CurrentSkinId => currentSkinId;
 
         public void Configure(
             PlayerProgression configuredProgression,
@@ -46,9 +51,11 @@ namespace SpiderSwing.Gameplay
             }
 
             ResolveReferences();
+            playerSkinVisual ??= GetComponent<PlayerSkinVisual>() ?? gameObject.AddComponent<PlayerSkinVisual>();
             if (progression == null
                 || demoRewards == null
-                || !demoRewards.TrySpend(pad.Cost))
+                || !pad.TryGetSkinMaterials(out var armMaterial, out var bodyMaterial)
+                || !demoRewards.CanAfford(pad.Cost))
             {
                 return false;
             }
@@ -58,10 +65,17 @@ namespace SpiderSwing.Gameplay
                 return false;
             }
 
+            if (!demoRewards.TrySpend(pad.Cost))
+            {
+                return false;
+            }
+
             purchasedUpgradeIds.Add(pad.UpgradeId);
-            playerController?.ApplyPlayerSkinMaterial(pad.PlayerSkinMaterial);
+            playerSkinVisual.Apply(armMaterial, bodyMaterial);
+            currentSkinId = pad.UpgradeId;
             pad.MarkPurchased();
             OnUpgradePurchased?.Invoke(pad);
+            OnSkinChanged?.Invoke(currentSkinId);
             return true;
         }
 
@@ -70,6 +84,9 @@ namespace SpiderSwing.Gameplay
             purchasedUpgradeIds.Clear();
             ResolveReferences();
             progression?.ResetForNewSession();
+            currentSkinId = "Default";
+            playerSkinVisual?.ResetToDefault();
+            OnSkinChanged?.Invoke(currentSkinId);
         }
 
         private void Awake()
@@ -82,6 +99,7 @@ namespace SpiderSwing.Gameplay
             progression ??= GetComponent<PlayerProgression>();
             demoRewards ??= GetComponent<PlayerDemoRewards>();
             playerController ??= GetComponent<LocalPlayerController>();
+            playerSkinVisual ??= GetComponent<PlayerSkinVisual>();
         }
     }
 }

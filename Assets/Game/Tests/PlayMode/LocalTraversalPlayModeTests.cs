@@ -145,11 +145,24 @@ namespace SpiderSwing.Tests
             secondUpgradeObject.AddComponent<BoxCollider>().isTrigger = true;
             var firstPad = firstUpgradeObject.AddComponent<UpgradePad>();
             var secondPad = secondUpgradeObject.AddComponent<UpgradePad>();
-            firstPad.Configure("Upgrade01", 5, 2f, 3, null, Color.cyan);
-            secondPad.Configure("Upgrade02", 20, 2f, 3, null, Color.magenta);
+            var firstArm = CreateMaterial(Color.cyan);
+            var firstBody = CreateMaterial(Color.blue);
+            var secondArm = CreateMaterial(Color.magenta);
+            var secondBody = CreateMaterial(Color.red);
+            CreateSkinModel(firstUpgradeObject.transform, "player", firstArm, firstBody);
+            CreateSkinModel(secondUpgradeObject.transform, "player", secondArm, secondBody);
+            firstPad.Configure("Upgrade01", 5, 2f, 3, Color.cyan);
+            secondPad.Configure("Upgrade02", 20, 2f, 3, Color.magenta);
 
             Assert.That(upgradeState.TryPurchase(firstPad), Is.True);
+            Assert.That(upgradeState.CurrentSkinId, Is.EqualTo("Upgrade01"));
             Assert.That(upgradeState.TryPurchase(secondPad), Is.True);
+            Assert.That(upgradeState.CurrentSkinId, Is.EqualTo("Upgrade02"));
+            Assert.That(
+                playerObject.GetComponent<PlayerSkinVisual>().TryGetCurrentMaterials(out var equippedArm, out var equippedBody),
+                Is.True);
+            Assert.That(equippedArm, Is.SameAs(secondArm));
+            Assert.That(equippedBody, Is.SameAs(secondBody));
             Assert.That(progression.UpgradeXpMultiplier, Is.EqualTo(4f).Within(0.001f));
             Assert.That(progression.CurrentMaxSwings, Is.EqualTo(8));
             Assert.That(localController.CurrentSwings, Is.EqualTo(1));
@@ -390,6 +403,10 @@ namespace SpiderSwing.Tests
             playerObject.transform.position = new Vector3(0f, 1f, 0f);
             playerObject.AddComponent<CharacterController>();
             localController = playerObject.AddComponent<LocalPlayerController>();
+            var defaultArm = CreateMaterial(Color.white);
+            var defaultBody = CreateMaterial(Color.gray);
+            var localSkin = CreateSkinModel(playerObject.transform, "base_rig", defaultArm, defaultBody);
+            playerObject.AddComponent<PlayerSkinVisual>().Configure(localSkin);
             checkpointProgress = playerObject.AddComponent<PlayerCheckpointProgress>();
             demoRewards = playerObject.AddComponent<PlayerDemoRewards>();
             localController.Configure(inputActions, null, balanceConfig);
@@ -465,6 +482,31 @@ namespace SpiderSwing.Tests
             typeof(LocalPlayerController)
                 .GetField("currentSwings", BindingFlags.Instance | BindingFlags.NonPublic)
                 ?.SetValue(controller, value);
+        }
+
+        private static Transform CreateSkinModel(
+            Transform parent,
+            string rootName,
+            Material armMaterial,
+            Material bodyMaterial)
+        {
+            var root = new GameObject(rootName).transform;
+            root.SetParent(parent, false);
+            var arm = new GameObject("Arm").AddComponent<MeshRenderer>();
+            arm.transform.SetParent(root, false);
+            arm.sharedMaterial = armMaterial;
+            var body = new GameObject("Body").AddComponent<MeshRenderer>();
+            body.transform.SetParent(root, false);
+            body.sharedMaterial = bodyMaterial;
+            return root;
+        }
+
+        private static Material CreateMaterial(Color color)
+        {
+            var shader = Shader.Find("Sprites/Default") ?? Shader.Find("Standard");
+            var material = new Material(shader);
+            material.color = color;
+            return material;
         }
 
         private static void Destroy(Object target)

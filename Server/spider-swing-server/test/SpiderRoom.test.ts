@@ -82,4 +82,24 @@ describe("spider_room foundation", () => {
     expect(senderState.x).toBe(12);
     await Promise.all([sender.leave(), observer.leave()]);
   });
+
+  it("synchronizes only approved skin ids for the sending player", async () => {
+    const room = await colyseus.createRoom("spider_room");
+    const sender = await colyseus.connectTo(room);
+    const observer = await colyseus.connectTo(room);
+    const senderState = room.state.players.get(sender.sessionId)!;
+    const observerState = room.state.players.get(observer.sessionId)!;
+
+    sender.send("skin", { skinId: "Upgrade02" });
+    await new Promise((resolve) => setTimeout(resolve, 20));
+
+    expect(senderState.skinId).toBe("Upgrade02");
+    expect(observerState.skinId).toBe("Default");
+
+    sender.send("skin", { skinId: "AnythingElse" });
+    await new Promise((resolve) => setTimeout(resolve, 20));
+
+    expect(senderState.skinId).toBe("Upgrade02");
+    await Promise.all([sender.leave(), observer.leave()]);
+  });
 });

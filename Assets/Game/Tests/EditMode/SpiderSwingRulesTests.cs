@@ -1,11 +1,33 @@
 using NUnit.Framework;
 using SpiderSwing.Gameplay;
+using UnityEditor;
 using UnityEngine;
 
 namespace SpiderSwing.Tests
 {
     public sealed class SpiderSwingRulesTests
     {
+        [Test]
+        public void AuthoredUpgradePrefabResolvesUsableSkinMaterials()
+        {
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Game/Prefab/Upgrade .prefab");
+            Assert.That(prefab, Is.Not.Null);
+
+            var instance = Object.Instantiate(prefab);
+            try
+            {
+                var pad = instance.GetComponent<UpgradePad>();
+                Assert.That(pad, Is.Not.Null);
+                Assert.That(pad.TryGetSkinMaterials(out var arm, out var body), Is.True);
+                Assert.That(arm, Is.Not.Null);
+                Assert.That(body, Is.Not.Null);
+            }
+            finally
+            {
+                Object.DestroyImmediate(instance);
+            }
+        }
+
         [Test]
         public void DistanceXpHonorsTheConfiguredMultiplier()
         {

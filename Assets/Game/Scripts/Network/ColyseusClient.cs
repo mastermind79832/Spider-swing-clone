@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Colyseus;
 using Colyseus.Schema;
+using SpiderSwing.Gameplay;
 using UnityEngine;
 
 namespace SpiderSwing.Network
@@ -29,17 +30,37 @@ namespace SpiderSwing.Network
         private int localPlayerNumber;
         private float nextTransformSendTime;
         private bool isSendingTransform;
+        private bool isSendingSkin;
+        private PlayerUpgradeState localUpgradeState;
+        private PlayerSkinVisual localSkinVisual;
+        private readonly Dictionary<string, SkinMaterials> skinCatalog = new Dictionary<string, SkinMaterials>();
+
+        private const string DefaultSkinId = "Default";
+
+        private readonly struct SkinMaterials
+        {
+            public SkinMaterials(Material arm, Material body)
+            {
+                Arm = arm;
+                Body = body;
+            }
+
+            public Material Arm { get; }
+            public Material Body { get; }
+        }
 
         private sealed class RemotePlayerView
         {
-            public RemotePlayerView(GameObject marker, Vector3 position, float yaw)
+            public RemotePlayerView(GameObject marker, Transform visualRoot, Vector3 position, float yaw)
             {
                 Marker = marker;
+                VisualRoot = visualRoot;
                 TargetPosition = position;
                 TargetYaw = yaw;
             }
 
             public GameObject Marker { get; }
+            public Transform VisualRoot { get; }
             public Vector3 TargetPosition { get; set; }
             public float TargetYaw { get; set; }
         }
@@ -51,6 +72,8 @@ namespace SpiderSwing.Network
 
         private async void Start()
         {
+            ResolveLocalSkinState();
+            BuildSkinCatalog();
             await Connect();
         }
 
@@ -80,6 +103,7 @@ namespace SpiderSwing.Network
 
                 await room.WaitForFirstState();
                 status = "Connected";
+                await SendLocalSkin(localUpgradeState != null ? localUpgradeState.CurrentSkinId : DefaultSkinId);
             }
             catch (Exception exception)
             {
@@ -109,22 +133,66 @@ namespace SpiderSwing.Network
                 player.Get<float>("y"),
                 player.Get<float>("z"));
             var yaw = player.Get<float>("yaw");
+            var skinId = player.Get<string>("skinId") ?? DefaultSkinId;
 
             if (!playerMarkers.TryGetValue(key, out var remotePlayer))
             {
-                var marker = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-                marker.name = $"NetworkPlayer_{key}";
-                marker.transform.SetParent(remotePlayerRoot != null ? remotePlayerRoot : transform, true);
-                marker.transform.localScale = new Vector3(0.8f, 1.2f, 0.8f);
-                marker.GetComponent<Renderer>().material.color = ColorForKey(key);
-                marker.GetComponent<Collider>().enabled = false;
+                var marker = CreateRemoteMarker(key, position, yaw, out var visualRoot);
                 marker.transform.SetPositionAndRotation(position, Quaternion.Euler(0f, yaw, 0f));
-                remotePlayer = new RemotePlayerView(marker, position, yaw);
+                remotePlayer = new RemotePlayerView(marker, visualRoot, position, yaw);
                 playerMarkers.Add(key, remotePlayer);
             }
 
             remotePlayer.TargetPosition = position;
             remotePlayer.TargetYaw = yaw;
+            ApplyRemoteSkin(remotePlayer, skinId);
+        }
+
+        private GameObject CreateRemoteMarker(string key, Vector3 position, float yaw, out Transform visualRoot)
+        {
+            var marker = new GameObject($"NetworkPlayer_{key}");
+            marker.transform.SetParent(remotePlayerRoot != null ? remotePlayerRoot : transform, true);
+            visualRoot = null;
+
+            if (localSkinVisual != null && localSkinVisual.ModelRoot != null)
+            {
+                var visual = Instantiate(localSkinVisual.ModelRoot.gameObject, marker.transform, false);
+                visual.name = "Visual";
+                visual.transform.localPosition = localSkinVisual.ModelRoot.localPosition;
+                visual.transform.localRotation = localSkinVisual.ModelRoot.localRotation;
+                visual.transform.localScale = localSkinVisual.ModelRoot.localScale;
+                foreach (var collider in visual.GetComponentsInChildren<Collider>(true))
+                {
+                    collider.enabled = false;
+                }
+
+                visualRoot = visual.transform;
+                return marker;
+            }
+
+            var fallback = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+            fallback.transform.SetParent(marker.transform, false);
+            fallback.transform.localScale = new Vector3(0.8f, 1.2f, 0.8f);
+            fallback.GetComponent<Renderer>().material.color = ColorForKey(key);
+            fallback.GetComponent<Collider>().enabled = false;
+            visualRoot = fallback.transform;
+            return marker;
+        }
+
+        private void ApplyRemoteSkin(RemotePlayerView remotePlayer, string skinId)
+        {
+            if (remotePlayer == null || remotePlayer.VisualRoot == null)
+            {
+                return;
+            }
+
+            if (!skinCatalog.TryGetValue(skinId, out var materials)
+                && !skinCatalog.TryGetValue(DefaultSkinId, out materials))
+            {
+                return;
+            }
+
+            PlayerSkinVisual.ApplyToHierarchy(remotePlayer.VisualRoot, materials.Arm, materials.Body);
         }
 
         private void RemovePlayer(string key)
@@ -202,6 +270,82 @@ namespace SpiderSwing.Network
             }
         }
 
+        private async Task SendLocalSkin(string skinId)
+        {
+            if (room == null || status != "Connected" || isSendingSkin)
+            {
+                return;
+            }
+
+            isSendingSkin = true;
+            try
+            {
+                await room.Send("skin", new Dictionary<string, object>
+                {
+                    ["skinId"] = string.IsNullOrWhiteSpace(skinId) ? DefaultSkinId : skinId,
+                });
+            }
+            catch (Exception exception)
+            {
+                lastError = exception.Message;
+                Debug.LogWarning("Unable to send the local player skin.", this);
+            }
+            finally
+            {
+                isSendingSkin = false;
+            }
+        }
+
+        private void ResolveLocalSkinState()
+        {
+            if (localPlayerMarker == null)
+            {
+                return;
+            }
+
+            var upgradeState = localPlayerMarker.GetComponent<PlayerUpgradeState>();
+            if (upgradeState != localUpgradeState)
+            {
+                if (localUpgradeState != null)
+                {
+                    localUpgradeState.OnSkinChanged -= HandleLocalSkinChanged;
+                }
+
+                localUpgradeState = upgradeState;
+                if (localUpgradeState != null)
+                {
+                    localUpgradeState.OnSkinChanged += HandleLocalSkinChanged;
+                }
+            }
+
+            localSkinVisual = localPlayerMarker.GetComponent<PlayerSkinVisual>()
+                ?? localPlayerMarker.gameObject.AddComponent<PlayerSkinVisual>();
+        }
+
+        private void BuildSkinCatalog()
+        {
+            skinCatalog.Clear();
+            if (localSkinVisual != null
+                && localSkinVisual.TryGetCurrentMaterials(out var defaultArm, out var defaultBody))
+            {
+                skinCatalog[DefaultSkinId] = new SkinMaterials(defaultArm, defaultBody);
+            }
+
+            foreach (var pad in FindObjectsByType<UpgradePad>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            {
+                if (!string.IsNullOrWhiteSpace(pad.UpgradeId)
+                    && pad.TryGetSkinMaterials(out var arm, out var body))
+                {
+                    skinCatalog[pad.UpgradeId] = new SkinMaterials(arm, body);
+                }
+            }
+        }
+
+        private void HandleLocalSkinChanged(string skinId)
+        {
+            _ = SendLocalSkin(skinId);
+        }
+
         private static Color ColorForKey(string key)
         {
             var hash = Math.Abs(key.GetHashCode());
@@ -210,6 +354,11 @@ namespace SpiderSwing.Network
 
         private async void OnDestroy()
         {
+            if (localUpgradeState != null)
+            {
+                localUpgradeState.OnSkinChanged -= HandleLocalSkinChanged;
+            }
+
             if (room != null)
             {
                 await room.Leave();

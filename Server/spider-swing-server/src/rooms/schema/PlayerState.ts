@@ -15,6 +15,9 @@ export class PlayerState extends Schema {
 
   @type("number")
   yaw = 0;
+
+  @type("string")
+  skinId = "Default";
 }
 
 export class SpiderRoomState extends Schema {

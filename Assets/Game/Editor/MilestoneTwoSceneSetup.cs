@@ -19,7 +19,6 @@ namespace SpiderSwing.Editor
         private const string BalanceConfigPath = "Assets/Game/Gameplay/Config/GameBalanceConfig.asset";
         private const string PlatformPrefabPath = "Assets/Game/Prefab/Platform.prefab";
         private const string UpgradePrefabPath = "Assets/Game/Prefab/Upgrade .prefab";
-        private const string UpgradeMaterialFolder = "Assets/Game/Material";
         private const int PlatformCount = 20;
 
         [MenuItem("Spider Swing/Apply Milestone 2B - Prefab Course")]
@@ -67,6 +66,7 @@ namespace SpiderSwing.Editor
             orbitCamera.Configure(actions, player.transform);
             playerController.Configure(actions, orbitCamera, config);
             progression.Configure(config, playerController);
+            EnsureComponent<PlayerSkinVisual>(player).Configure(FindChild(player.transform, "base_rig"));
 
             var webLine = EnsureComponent<LineRenderer>(player);
             ConfigureWebLine(webLine);
@@ -101,6 +101,7 @@ namespace SpiderSwing.Editor
             orbitCamera.Configure(actions, player.transform);
             localController.Configure(actions, orbitCamera, config);
             progression.Configure(config, localController);
+            EnsureComponent<PlayerSkinVisual>(player).Configure(FindChild(player.transform, "base_rig"));
 
             EditorUtility.SetDirty(player);
             EditorUtility.SetDirty(progression);
@@ -136,6 +137,7 @@ namespace SpiderSwing.Editor
             orbitCamera.Configure(actions, player.transform);
             localController.Configure(actions, orbitCamera, config);
             progression.Configure(config, localController);
+            EnsureComponent<PlayerSkinVisual>(player).Configure(FindChild(player.transform, "base_rig"));
             upgradeState.Configure(progression, rewards, localController);
 
             var treadmillZone = EnsureComponent<TreadmillXpZone>(treadmill);
@@ -148,9 +150,6 @@ namespace SpiderSwing.Editor
             treadmillCollider.isTrigger = true;
             treadmillZone.Configure(config.treadmillXpPerSecond);
 
-            var cyan = EnsureMaterial("UpgradeSkinCyan", new Color(0.05f, 0.85f, 1f));
-            var magenta = EnsureMaterial("UpgradeSkinMagenta", new Color(1f, 0.1f, 0.8f));
-            var gold = EnsureMaterial("UpgradeSkinGold", new Color(1f, 0.65f, 0.05f));
             var upgradesRoot = EnsureObject("Demo Upgrades", null);
             var firstUpgrade = GameObject.Find("Upgrade 01")
                 ?? GameObject.Find("Upgrade ")
@@ -168,7 +167,6 @@ namespace SpiderSwing.Editor
                 "Upgrade 01",
                 "Upgrade01",
                 5,
-                cyan,
                 new Color(0.05f, 0.85f, 1f));
 
             var secondUpgrade = FindChild(upgradesRoot.transform, "Upgrade 02")?.gameObject;
@@ -184,7 +182,6 @@ namespace SpiderSwing.Editor
                 "Upgrade 02",
                 "Upgrade02",
                 25,
-                magenta,
                 new Color(1f, 0.1f, 0.8f));
 
             var thirdUpgrade = FindChild(upgradesRoot.transform, "Upgrade 03")?.gameObject;
@@ -200,7 +197,6 @@ namespace SpiderSwing.Editor
                 "Upgrade 03",
                 "Upgrade03",
                 75,
-                gold,
                 new Color(1f, 0.65f, 0.05f));
 
             foreach (var platform in UnityEngine.Object.FindObjectsByType<CoursePlatform>(
@@ -209,6 +205,11 @@ namespace SpiderSwing.Editor
             {
                 platform.RefreshPointText();
                 EditorUtility.SetDirty(platform);
+                if (platform.PointText != null)
+                {
+                    EditorUtility.SetDirty(platform.PointText);
+                    PrefabUtility.RecordPrefabInstancePropertyModifications(platform.PointText);
+                }
             }
 
             EditorUtility.SetDirty(player);
@@ -218,6 +219,39 @@ namespace SpiderSwing.Editor
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             Debug.Log("Spider Swing Milestone 3C training, upgrades, and point labels setup completed.");
+        }
+
+        [MenuItem("Spider Swing/Repair Upgrade Pad Components")]
+        public static void RepairUpgradePadComponents()
+        {
+            var scene = EditorSceneManager.OpenScene(GameplayScenePath, OpenSceneMode.Single);
+            var upgradesRoot = GameObject.Find("Demo Upgrades");
+            if (upgradesRoot == null)
+            {
+                throw new InvalidOperationException("Upgrade-pad repair requires the saved Demo Upgrades root.");
+            }
+
+            RepairUpgradePad(
+                FindChild(upgradesRoot.transform, "Upgrade 01")?.gameObject,
+                "Upgrade01",
+                5,
+                new Color(0.05f, 0.85f, 1f));
+            RepairUpgradePad(
+                FindChild(upgradesRoot.transform, "Upgrade 02")?.gameObject,
+                "Upgrade02",
+                25,
+                new Color(1f, 0.1f, 0.8f));
+            RepairUpgradePad(
+                FindChild(upgradesRoot.transform, "Upgrade 03")?.gameObject,
+                "Upgrade03",
+                75,
+                new Color(1f, 0.65f, 0.05f));
+
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene, GameplayScenePath);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            Debug.Log("Spider Swing repaired upgrade pads: one configured UpgradePad remains on each pad.");
         }
 
         [MenuItem("Spider Swing/Repair Platform Script References")]
@@ -480,7 +514,6 @@ namespace SpiderSwing.Editor
             string objectName,
             string upgradeId,
             int cost,
-            Material skinMaterial,
             Color labelColor)
         {
             upgrade.name = objectName;
@@ -491,28 +524,51 @@ namespace SpiderSwing.Editor
             collider.isTrigger = true;
             collider.enabled = true;
 
-            var pad = EnsureComponent<UpgradePad>(upgrade);
-            pad.Configure(upgradeId, cost, 2f, 3, skinMaterial, labelColor);
+            var pad = GetSingleUpgradePad(upgrade);
+            pad.Configure(upgradeId, cost, 2f, 3, labelColor);
+            PrefabUtility.RecordPrefabInstancePropertyModifications(pad);
             PrefabUtility.RecordPrefabInstancePropertyModifications(upgrade);
             EditorUtility.SetDirty(upgrade);
         }
 
-        private static Material EnsureMaterial(string materialName, Color color)
+        private static void RepairUpgradePad(
+            GameObject upgrade,
+            string upgradeId,
+            int cost,
+            Color labelColor)
         {
-            var path = $"{UpgradeMaterialFolder}/{materialName}.mat";
-            var material = AssetDatabase.LoadAssetAtPath<Material>(path);
-            if (material == null)
+            if (upgrade == null)
             {
-                material = new Material(Shader.Find("Standard"))
-                {
-                    name = materialName,
-                };
-                AssetDatabase.CreateAsset(material, path);
+                throw new InvalidOperationException($"Upgrade-pad repair could not find {upgradeId}.");
             }
 
-            material.color = color;
-            EditorUtility.SetDirty(material);
-            return material;
+            var pad = GetSingleUpgradePad(upgrade);
+            pad.Configure(upgradeId, cost, 2f, 3, labelColor);
+            PrefabUtility.RecordPrefabInstancePropertyModifications(pad);
+            PrefabUtility.RecordPrefabInstancePropertyModifications(upgrade);
+            EditorUtility.SetDirty(upgrade);
+        }
+
+        private static UpgradePad GetSingleUpgradePad(GameObject upgrade)
+        {
+            var pads = upgrade.GetComponents<UpgradePad>();
+            if (pads.Length == 0)
+            {
+                return upgrade.AddComponent<UpgradePad>();
+            }
+
+            var keeper = Array.Find(
+                pads,
+                pad => PrefabUtility.GetCorrespondingObjectFromSource(pad) != null) ?? pads[0];
+            foreach (var pad in pads)
+            {
+                if (pad != keeper)
+                {
+                    Undo.DestroyObjectImmediate(pad);
+                }
+            }
+
+            return keeper;
         }
 
         private static Transform FindChild(Transform root, string childName)
