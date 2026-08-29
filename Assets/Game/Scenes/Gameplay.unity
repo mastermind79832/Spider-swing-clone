@@ -175,18 +175,47 @@ PrefabInstance:
       propertyPath: m_Name
       value: base_rig
       objectReference: {fileID: 0}
+    - target: {fileID: 4486050647588734685, guid: 1a16e588f63c1304d91475b16af21e55, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 1a16e588f63c1304d91475b16af21e55, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 282e66f14367be64490042d0cb45642a, type: 2}
     - target: {fileID: 8009987137999418058, guid: 1a16e588f63c1304d91475b16af21e55, type: 3}
       propertyPath: m_Name
       value: Body
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -4417447978512107488, guid: 1a16e588f63c1304d91475b16af21e55, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 168963769}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1a16e588f63c1304d91475b16af21e55, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1669357384}
   m_SourcePrefab: {fileID: 100100000, guid: 1a16e588f63c1304d91475b16af21e55, type: 3}
 --- !u!4 &16852665 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1a16e588f63c1304d91475b16af21e55, type: 3}
+  m_PrefabInstance: {fileID: 16852664}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &16852666 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -4417447978512107488, guid: 1a16e588f63c1304d91475b16af21e55, type: 3}
+  m_PrefabInstance: {fileID: 16852664}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &16852667 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8100221583095748457, guid: 1a16e588f63c1304d91475b16af21e55, type: 3}
+  m_PrefabInstance: {fileID: 16852664}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &16852668 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 1a16e588f63c1304d91475b16af21e55, type: 3}
   m_PrefabInstance: {fileID: 16852664}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &23927709
@@ -430,6 +459,8 @@ GameObject:
   - component: {fileID: 117212810}
   - component: {fileID: 117212811}
   - component: {fileID: 117212812}
+  - component: {fileID: 117212813}
+  - component: {fileID: 117212814}
   m_Layer: 0
   m_Name: LocalPlayerMarker
   m_TagString: Untagged
@@ -559,6 +590,8 @@ MonoBehaviour:
   progression: {fileID: 117212811}
   webLine: {fileID: 117212806}
   webOrigin: {fileID: 0}
+  swingVisual: {fileID: 117212813}
+  animationController: {fileID: 0}
 --- !u!143 &117212804
 CharacterController:
   m_ObjectHideFlags: 0
@@ -783,6 +816,73 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66c113d10a0b9ff4cad2849d0c6fc403, type: 3}
   m_Name: 
   m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.PlayerUpgradeState
+--- !u!114 &117212813
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 117212798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57c10aab14e53b74cb41ac24303742e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.PlayerSwingVisual
+  modelRoot: {fileID: 16852665}
+  rightUpperArm: {fileID: 16852667}
+  rightLowerArm: {fileID: 16852666}
+  webOrigin: {fileID: 168963769}
+  webLine: {fileID: 117212806}
+  webWidth: 0.04
+  armAimAxis: {x: 0, y: 1, z: 0}
+  poseBlendDuration: 0.1
+--- !u!114 &117212814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 117212798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17edfbcce74a8234ea7730da347be607, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.PlayerAnimationController
+  modelRoot: {fileID: 16852665}
+  animator: {fileID: 16852668}
+  blendDuration: 0.1
+  currentState: 0
+--- !u!1 &168963768
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 168963769}
+  m_Layer: 0
+  m_Name: RightWebOrigin
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &168963769
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 168963768}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.011999995, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 16852666}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &169419458
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1285,6 +1385,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CourseReturnPoint
   platform: {fileID: 0}
   rewardValue: 9
+--- !u!4 &310199275 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8570505361064875665, guid: 1a16e588f63c1304d91475b16af21e55, type: 3}
+  m_PrefabInstance: {fileID: 16852664}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &385119284
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1403,7 +1508,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48911a6e8b50cc044a3e868b3ff4c8be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Network.ColyseusClient
-  endpoint: ws://localhost:2567
+  endpoint: wss://variations-absorption-ent-procedure.trycloudflare.com
   roomName: spider_room
   localPlayerMarker: {fileID: 117212799}
   remotePlayerRoot: {fileID: 0}
@@ -1424,6 +1529,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &574994839 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4358262658027463318, guid: 1a16e588f63c1304d91475b16af21e55, type: 3}
+  m_PrefabInstance: {fileID: 16852664}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &613106627
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1666,6 +1776,16 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 1941104716937081296, guid: 2dfdf8eb4187bed449b574ffad74c746, type: 3}
   m_PrefabInstance: {fileID: 668164819}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &676901562 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -4203630701308118483, guid: 1a16e588f63c1304d91475b16af21e55, type: 3}
+  m_PrefabInstance: {fileID: 16852664}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &833009646 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4486050647588734685, guid: 1a16e588f63c1304d91475b16af21e55, type: 3}
+  m_PrefabInstance: {fileID: 16852664}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &840742301
 GameObject:
@@ -2892,6 +3012,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: SpiderSwing.Gameplay::SpiderSwing.Gameplay.CourseReturnPoint
   platform: {fileID: 0}
   rewardValue: 3
+--- !u!4 &1516231720 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 9031537955960305117, guid: 1a16e588f63c1304d91475b16af21e55, type: 3}
+  m_PrefabInstance: {fileID: 16852664}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1589772639 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -2324360989187771171, guid: 1a16e588f63c1304d91475b16af21e55, type: 3}
+  m_PrefabInstance: {fileID: 16852664}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1600489593
 GameObject:
   m_ObjectHideFlags: 0
@@ -2995,6 +3125,48 @@ MonoBehaviour:
   mouseSensitivity: 0.12
   minPitch: -15
   maxPitch: 65
+--- !u!1 &1669357382 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 1a16e588f63c1304d91475b16af21e55, type: 3}
+  m_PrefabInstance: {fileID: 16852664}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1669357384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1669357382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2d8418b0b9634b1892b0268dd9c2743, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Animation.Rigging::UnityEngine.Animations.Rigging.BoneRenderer
+  boneShape: 1
+  drawBones: 1
+  drawTripods: 0
+  boneSize: 1.03
+  tripodSize: 1.46
+  boneColor: {r: 0, g: 0, b: 1, a: 0.5}
+  m_Transforms:
+  - {fileID: 1589772639}
+  - {fileID: 1997753917}
+  - {fileID: 1988800087}
+  - {fileID: 1516231720}
+  - {fileID: 574994839}
+  - {fileID: 833009646}
+  - {fileID: 16852667}
+  - {fileID: 2055046827}
+  - {fileID: 310199275}
+  - {fileID: 16852666}
+  - {fileID: 168963769}
+  - {fileID: 1760659893}
+  - {fileID: 676901562}
+--- !u!4 &1760659893 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -7572974533965528404, guid: 1a16e588f63c1304d91475b16af21e55, type: 3}
+  m_PrefabInstance: {fileID: 16852664}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1837323425
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3363,6 +3535,16 @@ Transform:
   - {fileID: 276808496}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1988800087 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 9133488686917874708, guid: 1a16e588f63c1304d91475b16af21e55, type: 3}
+  m_PrefabInstance: {fileID: 16852664}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1997753917 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7741429551680760490, guid: 1a16e588f63c1304d91475b16af21e55, type: 3}
+  m_PrefabInstance: {fileID: 16852664}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2015655124
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3549,6 +3731,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &2055046827 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -5153335208363485445, guid: 1a16e588f63c1304d91475b16af21e55, type: 3}
+  m_PrefabInstance: {fileID: 16852664}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2095913319
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using SpiderSwing.Gameplay;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
@@ -54,21 +55,22 @@ namespace SpiderSwing.Tests
         }
 
         [Test]
-        public void MaximumLevelStopsFurtherXpProgression()
+        public void ProgressionContinuesPastTheFormerLevelTenCap()
         {
-            var result = ProgressionRules.ResolveXp(10, 25f, 500f, 10, 100f);
+            var result = ProgressionRules.ResolveXp(10, 25f, 2100f, 10, 100f);
 
-            Assert.That(result.level, Is.EqualTo(10));
-            Assert.That(result.xp, Is.EqualTo(0f).Within(0.0001f));
-            Assert.That(result.levelsGained, Is.EqualTo(0));
+            Assert.That(result.level, Is.EqualTo(12));
+            Assert.That(result.xp, Is.EqualTo(25f).Within(0.0001f));
+            Assert.That(result.levelsGained, Is.EqualTo(2));
         }
 
         [Test]
-        public void ProgressionStatsMatchTheLockedFastDemoCurve()
+        public void ProgressionStatsMatchTheFasterDemoCurve()
         {
-            Assert.That(ProgressionRules.MoveSpeedForLevel(7f, 1, 0.75f), Is.EqualTo(7f).Within(0.0001f));
-            Assert.That(ProgressionRules.MoveSpeedForLevel(7f, 5, 0.75f), Is.EqualTo(10f).Within(0.0001f));
-            Assert.That(ProgressionRules.MoveSpeedForLevel(7f, 10, 0.75f), Is.EqualTo(13.75f).Within(0.0001f));
+            Assert.That(ProgressionRules.MoveSpeedForLevel(7f, 1, 1.25f), Is.EqualTo(7f).Within(0.0001f));
+            Assert.That(ProgressionRules.MoveSpeedForLevel(7f, 5, 1.25f), Is.EqualTo(12f).Within(0.0001f));
+            Assert.That(ProgressionRules.MoveSpeedForLevel(7f, 10, 1.25f), Is.EqualTo(18.25f).Within(0.0001f));
+            Assert.That(ProgressionRules.MoveSpeedForLevel(7f, 11, 1.25f), Is.EqualTo(19.5f).Within(0.0001f));
 
             Assert.That(ProgressionRules.SwingMultiplierForLevel(1f, 1, 0.15f), Is.EqualTo(1f).Within(0.0001f));
             Assert.That(ProgressionRules.SwingMultiplierForLevel(1f, 5, 0.15f), Is.EqualTo(1.6f).Within(0.0001f));
@@ -77,6 +79,19 @@ namespace SpiderSwing.Tests
             Assert.That(ProgressionRules.MaxSwingsForLevel(2, 1, 2), Is.EqualTo(2));
             Assert.That(ProgressionRules.MaxSwingsForLevel(2, 5, 2), Is.EqualTo(4));
             Assert.That(ProgressionRules.MaxSwingsForLevel(2, 10, 2), Is.EqualTo(7));
+        }
+
+        [Test]
+        public void TravelSpeedUsesTheHighSharedCap()
+        {
+            Assert.That(
+                ProgressionRules.MoveSpeedForLevel(7f, 35, 1.25f, 50f),
+                Is.EqualTo(49.5f).Within(0.0001f));
+            Assert.That(
+                ProgressionRules.MoveSpeedForLevel(7f, 50, 1.25f, 50f),
+                Is.EqualTo(50f).Within(0.0001f));
+            Assert.That(ProgressionRules.ClampTravelSpeed(200f, 50f), Is.EqualTo(50f));
+            Assert.That(ProgressionRules.ClampTravelSpeed(-10f, 50f), Is.EqualTo(0f));
         }
 
         [Test]
@@ -124,9 +139,83 @@ namespace SpiderSwing.Tests
             try
             {
                 Assert.That(config.jumpHeight, Is.EqualTo(6f).Within(0.0001f));
+                Assert.That(config.jumpLandingGraceDuration, Is.EqualTo(0.12f).Within(0.0001f));
                 Assert.That(
                     SwingRules.EvaluateJumpVelocity(config.jumpHeight, config.gravity),
                     Is.EqualTo(Mathf.Sqrt(288f)).Within(0.0001f));
+            }
+            finally
+            {
+                Object.DestroyImmediate(config);
+            }
+        }
+
+        [Test]
+        public void LandingRecoveryRequiresDescendingContactAfterGrace()
+        {
+            Assert.That(
+                LandingRules.CanStartRecovery(
+                    PlayerMovementState.Airborne,
+                    true,
+                    0.1f,
+                    0f),
+                Is.False);
+            Assert.That(
+                LandingRules.CanStartRecovery(
+                    PlayerMovementState.Airborne,
+                    true,
+                    -0.1f,
+                    0.01f),
+                Is.False);
+            Assert.That(
+                LandingRules.CanStartRecovery(
+                    PlayerMovementState.Airborne,
+                    true,
+                    -0.1f,
+                    0f),
+                Is.True);
+            Assert.That(
+                LandingRules.CanStartRecovery(
+                    PlayerMovementState.Swinging,
+                    true,
+                    0f,
+                    0f),
+                Is.True);
+            Assert.That(
+                LandingRules.CanStartRecovery(
+                    PlayerMovementState.Grounded,
+                    true,
+                    -0.1f,
+                    0f),
+                Is.False);
+            Assert.That(
+                LandingRules.CanStartRecovery(
+                    PlayerMovementState.Dead,
+                    true,
+                    -0.1f,
+                    0f),
+                Is.False);
+            Assert.That(
+                LandingRules.CanStartRecovery(
+                    PlayerMovementState.Landing,
+                    true,
+                    -0.1f,
+                    0f),
+                Is.False);
+        }
+
+        [Test]
+        public void JumpLandingGraceClampsToNonNegative()
+        {
+            var config = ScriptableObject.CreateInstance<GameBalanceConfig>();
+            try
+            {
+                config.jumpLandingGraceDuration = -1f;
+                typeof(GameBalanceConfig)
+                    .GetMethod("OnValidate", BindingFlags.Instance | BindingFlags.NonPublic)
+                    ?.Invoke(config, null);
+
+                Assert.That(config.jumpLandingGraceDuration, Is.EqualTo(0f));
             }
             finally
             {
@@ -146,6 +235,56 @@ namespace SpiderSwing.Tests
 
             Assert.That(inputDirection, Is.EqualTo(new Vector3(1f, 0f, 1f).normalized));
             Assert.That(fallbackDirection, Is.EqualTo(Vector3.right));
+        }
+
+        [Test]
+        public void ProjectedAnchorUsesHalfSwingTravelCurveAndHeightOffset()
+        {
+            var curve = new AnimationCurve(
+                new Keyframe(0f, 0f),
+                new Keyframe(0.5f, -2f),
+                new Keyframe(1f, 6f));
+
+            var anchor = SwingRules.CalculateProjectedAnchor(
+                new Vector3(0f, 10f, 0f),
+                Vector3.forward,
+                7f,
+                1.25f,
+                curve,
+                20f);
+
+            Assert.That(anchor.x, Is.EqualTo(0f).Within(0.0001f));
+            Assert.That(anchor.y, Is.EqualTo(28f).Within(0.0001f));
+            Assert.That(anchor.z, Is.EqualTo(4.375f).Within(0.0001f));
+        }
+
+        [Test]
+        public void ProjectedAnchorScalesForwardTravelWithEffectiveSwingSpeed()
+        {
+            var anchor = SwingRules.CalculateProjectedAnchor(
+                Vector3.zero,
+                Vector3.forward,
+                18.25f * 2.35f,
+                1.25f,
+                new AnimationCurve(new Keyframe(0f, 0f), new Keyframe(0.5f, -2f)),
+                20f);
+
+            Assert.That(anchor.z, Is.EqualTo(26.8046875f).Within(0.0001f));
+            Assert.That(anchor.y, Is.EqualTo(18f).Within(0.0001f));
+        }
+
+        [Test]
+        public void ProjectedAnchorClampsNegativeSpeedAndDuration()
+        {
+            var anchor = SwingRules.CalculateProjectedAnchor(
+                new Vector3(2f, 5f, 3f),
+                Vector3.right,
+                -10f,
+                -1f,
+                null,
+                20f);
+
+            Assert.That(anchor, Is.EqualTo(new Vector3(2f, 25f, 3f)));
         }
 
         [Test]

@@ -18,6 +18,21 @@ export class PlayerState extends Schema {
 
   @type("string")
   skinId = "Default";
+
+  @type("boolean")
+  isSwinging = false;
+
+  @type("number")
+  swingAnchorX = 0;
+
+  @type("number")
+  swingAnchorY = 0;
+
+  @type("number")
+  swingAnchorZ = 0;
+
+  @type("number")
+  animationState = 0;
 }
 
 export class SpiderRoomState extends Schema {

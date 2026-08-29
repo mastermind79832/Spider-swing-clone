@@ -17,21 +17,21 @@ namespace SpiderSwing.Gameplay
 
         public int Level => level;
         public float CurrentXp => currentXp;
-        public int MaximumLevel => GetBalanceValue(value => value.maximumLevel, 10);
+        // Kept as a compatibility surface for existing HUD/integration code. There is no practical level cap.
+        public int MaximumLevel => int.MaxValue;
         public float BaseXpMultiplier => GetBalanceValue(value => value.xpMultiplier, 1f);
         public float UpgradeXpMultiplier => upgradeXpMultiplier;
         public float XpMultiplier => BaseXpMultiplier * upgradeXpMultiplier;
         public int UpgradeSwingBonus => upgradeSwingBonus;
-        public bool IsAtMaximumLevel => level >= MaximumLevel;
-        public float XpToNextLevel => IsAtMaximumLevel
-            ? 0f
-            : ProgressionRules.RequiredXpForLevel(
-                level,
-                GetBalanceValue(value => value.baseXpToNextLevel, 100f));
+        public bool IsAtMaximumLevel => false;
+        public float XpToNextLevel => ProgressionRules.RequiredXpForLevel(
+            level,
+            GetBalanceValue(value => value.baseXpToNextLevel, 100f));
         public float CurrentMoveSpeed => ProgressionRules.MoveSpeedForLevel(
             GetBalanceValue(value => value.moveSpeed, playerController != null ? playerController.BaseMoveSpeed : 7f),
             level,
-            GetBalanceValue(value => value.movementSpeedPerLevel, 0.75f));
+            GetBalanceValue(value => value.movementSpeedPerLevel, 1.25f),
+            GetBalanceValue(value => value.maximumTravelSpeed, 50f));
         public float CurrentSwingForwardMultiplier => ProgressionRules.SwingMultiplierForLevel(
             GetBalanceValue(value => value.swingForwardMultiplier, playerController != null
                 ? playerController.BaseSwingForwardMultiplier
@@ -72,7 +72,7 @@ namespace SpiderSwing.Gameplay
 
         public void AddRawXp(float rawXp)
         {
-            if (IsAtMaximumLevel || rawXp <= 0f)
+            if (rawXp <= 0f)
             {
                 return;
             }
@@ -88,7 +88,6 @@ namespace SpiderSwing.Gameplay
                 level,
                 currentXp,
                 addedXp,
-                MaximumLevel,
                 GetBalanceValue(value => value.baseXpToNextLevel, 100f));
             level = resolution.level;
             currentXp = resolution.xp;

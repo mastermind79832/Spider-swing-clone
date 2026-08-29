@@ -8,6 +8,7 @@ namespace SpiderSwing.Gameplay
         Airborne,
         Swinging,
         Dead,
+        Landing,
     }
 
     public static class SwingRules
@@ -39,6 +40,28 @@ namespace SpiderSwing.Gameplay
             return planarForward.sqrMagnitude > 0.0001f
                 ? planarForward.normalized
                 : Vector3.forward;
+        }
+
+        public static Vector3 CalculateProjectedAnchor(
+            Vector3 startPosition,
+            Vector3 direction,
+            float effectiveSwingSpeed,
+            float swingDuration,
+            AnimationCurve verticalCurve,
+            float verticalOffset)
+        {
+            var planarDirection = CaptureDirection(direction, Vector3.forward);
+            var safeSpeed = Mathf.Max(0f, effectiveSwingSpeed);
+            var safeDuration = Mathf.Max(0f, swingDuration);
+            var halfSwingTime = safeDuration * 0.5f;
+            var midpointCurveOffset = verticalCurve != null
+                ? verticalCurve.Evaluate(0.5f)
+                : 0f;
+
+            var projectedMidpoint = startPosition
+                + planarDirection * safeSpeed * halfSwingTime;
+            projectedMidpoint.y = startPosition.y + midpointCurveOffset;
+            return projectedMidpoint + Vector3.up * verticalOffset;
         }
 
         public static float EvaluateVertical(
@@ -89,6 +112,28 @@ namespace SpiderSwing.Gameplay
         }
     }
 
+    public static class LandingRules
+    {
+        private const float VerticalStationaryTolerance = 0.0001f;
+
+        public static bool CanStartRecovery(
+            PlayerMovementState state,
+            bool groundedContact,
+            float requestedVerticalDelta,
+            float graceRemaining)
+        {
+            if (state != PlayerMovementState.Airborne
+                && state != PlayerMovementState.Swinging)
+            {
+                return false;
+            }
+
+            return groundedContact
+                && graceRemaining <= 0f
+                && requestedVerticalDelta <= VerticalStationaryTolerance;
+        }
+    }
+
     public static class TraversalDistanceRules
     {
         public static bool TryGetDistance(
@@ -99,7 +144,10 @@ namespace SpiderSwing.Gameplay
             out float distance)
         {
             distance = Vector3.Distance(previousPosition, currentPosition);
-            return state != PlayerMovementState.Dead && !isRespawning && distance > 0.0001f;
+            return state != PlayerMovementState.Dead
+                && state != PlayerMovementState.Landing
+                && !isRespawning
+                && distance > 0.0001f;
         }
     }
 

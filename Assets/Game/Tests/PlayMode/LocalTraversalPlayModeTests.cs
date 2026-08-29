@@ -109,10 +109,32 @@ namespace SpiderSwing.Tests
 
             Assert.That(progression.Level, Is.EqualTo(2));
             Assert.That(progression.CurrentXp, Is.EqualTo(0f).Within(0.001f));
-            Assert.That(localController.MoveSpeed, Is.EqualTo(7.75f).Within(0.001f));
+            Assert.That(localController.MoveSpeed, Is.EqualTo(8.25f).Within(0.001f));
             Assert.That(localController.SwingForwardMultiplier, Is.EqualTo(1.15f).Within(0.001f));
             Assert.That(localController.MaxSwings, Is.EqualTo(3));
             Assert.That(localController.CurrentSwings, Is.EqualTo(3));
+            yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator SwingAnchorUsesCapturedSpeedAndRemainsFixedThroughLevelUp()
+        {
+            CreatePlayer(out var localController);
+            playerObject.GetComponent<CharacterController>().enabled = false;
+            playerObject.transform.position = new Vector3(0f, 3f, 0f);
+            playerObject.GetComponent<CharacterController>().enabled = true;
+            SetState(localController, PlayerMovementState.Airborne);
+
+            Assert.That(localController.TryStartSwing(), Is.True);
+            var initialAnchor = localController.SwingAnchor;
+            Assert.That(initialAnchor.z, Is.EqualTo(4.375f).Within(0.001f));
+            Assert.That(initialAnchor.y, Is.EqualTo(21f).Within(0.001f));
+            Assert.That(localController.SwingHorizontalSpeed, Is.EqualTo(7f).Within(0.001f));
+
+            progression.AddTraversalDistance(100f);
+
+            Assert.That(localController.SwingAnchor, Is.EqualTo(initialAnchor));
+            Assert.That(localController.SwingHorizontalSpeed, Is.EqualTo(7f).Within(0.001f));
             yield return null;
         }
 
@@ -305,6 +327,59 @@ namespace SpiderSwing.Tests
         }
 
         [UnityTest]
+        public IEnumerator AirborneLandingStartsRecoveryAndLocksMovement()
+        {
+            CreatePlayer(out var localController);
+            SetState(localController, PlayerMovementState.Airborne);
+
+            typeof(LocalPlayerController)
+                .GetMethod("MoveAndTrack", BindingFlags.Instance | BindingFlags.NonPublic)
+                ?.Invoke(localController, new object[] { Vector3.down * 2f, false });
+
+            Assert.That(localController.State, Is.EqualTo(PlayerMovementState.Landing));
+            var landingPosition = playerObject.transform.position;
+
+            typeof(LocalPlayerController)
+                .GetMethod("UpdateLandingRecovery", BindingFlags.Instance | BindingFlags.NonPublic)
+                ?.Invoke(localController, new object[] { 0.2f });
+
+            Assert.That(localController.State, Is.EqualTo(PlayerMovementState.Landing));
+            Assert.That(playerObject.transform.position, Is.EqualTo(landingPosition));
+
+            typeof(LocalPlayerController)
+                .GetMethod("UpdateLandingRecovery", BindingFlags.Instance | BindingFlags.NonPublic)
+                ?.Invoke(localController, new object[] { 0.2f });
+
+            Assert.That(localController.State, Is.EqualTo(PlayerMovementState.Grounded));
+            yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator SwingAnimationChangesToForwardAtTheMidpoint()
+        {
+            CreatePlayer(out var localController);
+            playerObject.GetComponent<CharacterController>().enabled = false;
+            playerObject.transform.position = new Vector3(0f, 3f, 0f);
+            playerObject.GetComponent<CharacterController>().enabled = true;
+            SetState(localController, PlayerMovementState.Airborne);
+
+            var animationController = playerObject.AddComponent<PlayerAnimationController>();
+            typeof(LocalPlayerController)
+                .GetField("animationController", BindingFlags.Instance | BindingFlags.NonPublic)
+                ?.SetValue(localController, animationController);
+
+            Assert.That(localController.TryStartSwing(), Is.True);
+            Assert.That(animationController.CurrentState, Is.EqualTo(PlayerAnimationState.SwingBack));
+
+            typeof(LocalPlayerController)
+                .GetMethod("UpdateSwing", BindingFlags.Instance | BindingFlags.NonPublic)
+                ?.Invoke(localController, new object[] { 0.7f });
+
+            Assert.That(animationController.CurrentState, Is.EqualTo(PlayerAnimationState.SwingForward));
+            yield return null;
+        }
+
+        [UnityTest]
         public IEnumerator LandingOnAnyCoursePlatformRestoresFullSwings()
         {
             CreatePlayer(out var localController);
@@ -386,6 +461,32 @@ namespace SpiderSwing.Tests
             Assert.That(callbackValue, Is.EqualTo(3));
             Assert.That(checkpointProgress.LastCheckpointId, Is.EqualTo("P03"));
             Assert.That(deathController.IsRespawning, Is.False);
+            yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator JumpTakeoffDoesNotImmediatelyEnterLanding()
+        {
+            CreatePlayer(out var localController);
+            SetState(localController, PlayerMovementState.Grounded);
+
+            typeof(LocalPlayerController)
+                .GetMethod("StartJump", BindingFlags.Instance | BindingFlags.NonPublic)
+                ?.Invoke(localController, null);
+
+            Assert.That(localController.State, Is.EqualTo(PlayerMovementState.Airborne));
+            Assert.That(
+                localController.JumpLandingGraceRemaining,
+                Is.EqualTo(0.12f).Within(0.001f));
+
+            var takeoffPosition = playerObject.transform.position;
+            typeof(LocalPlayerController)
+                .GetMethod("MoveAndTrack", BindingFlags.Instance | BindingFlags.NonPublic)
+                ?.Invoke(localController, new object[] { Vector3.up * 0.1f, true });
+
+            Assert.That(localController.State, Is.EqualTo(PlayerMovementState.Airborne));
+            Assert.That(localController.IsLandingRecovery, Is.False);
+            Assert.That(playerObject.transform.position.y, Is.GreaterThan(takeoffPosition.y));
             yield return null;
         }
 
@@ -481,6 +582,13 @@ namespace SpiderSwing.Tests
         {
             typeof(LocalPlayerController)
                 .GetField("currentSwings", BindingFlags.Instance | BindingFlags.NonPublic)
+                ?.SetValue(controller, value);
+        }
+
+        private static void SetState(LocalPlayerController controller, PlayerMovementState value)
+        {
+            typeof(LocalPlayerController)
+                .GetField("state", BindingFlags.Instance | BindingFlags.NonPublic)
                 ?.SetValue(controller, value);
         }
 

@@ -16,6 +16,8 @@ MonoBehaviour:
   rotationSharpness: 14
   gravity: -24
   jumpHeight: 6
+  jumpLandingGraceDuration: 0.12
+  maximumTravelSpeed: 50
   maxSwings: 2
   swingDuration: 1.25
   swingForwardMultiplier: 1
@@ -52,18 +54,18 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  webAnchorForwardOffset: 6
-  webAnchorHeightOffset: 10
+  webAnchorHeightOffset: 20
   releaseVelocityMinimum: -12
   releaseVelocityMaximum: 12
   respawnDelay: 1
   sideDeathX: 45
   deathY: -20
   maximumY: 60
-  maximumLevel: 10
   xpMultiplier: 1
   baseXpToNextLevel: 100
-  movementSpeedPerLevel: 0.75
+  movementSpeedPerLevel: 1.25
   swingForwardMultiplierPerLevel: 0.15
   extraSwingEveryLevels: 2
   treadmillXpPerSecond: 10
+  animationBlendDuration: 0.1
+  landingRecoveryDuration: 0.4

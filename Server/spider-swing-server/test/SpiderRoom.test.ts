@@ -76,6 +76,10 @@ describe("spider_room foundation", () => {
     expect(senderState.yaw).toBe(90);
     expect(observerState.x).toBe(2);
 
+    sender.send("transform", { x: 12, y: 3, z: 1000, yaw: 0 });
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    expect(senderState.z).toBe(1000);
+
     sender.send("transform", { x: 1000, y: 3, z: -8, yaw: 0 });
     await new Promise((resolve) => setTimeout(resolve, 20));
 
@@ -100,6 +104,81 @@ describe("spider_room foundation", () => {
     await new Promise((resolve) => setTimeout(resolve, 20));
 
     expect(senderState.skinId).toBe("Upgrade02");
+    await Promise.all([sender.leave(), observer.leave()]);
+  });
+
+  it("synchronizes swing state only for the sending player", async () => {
+    const room = await colyseus.createRoom("spider_room");
+    const sender = await colyseus.connectTo(room);
+    const observer = await colyseus.connectTo(room);
+    const senderState = room.state.players.get(sender.sessionId)!;
+    const observerState = room.state.players.get(observer.sessionId)!;
+
+    sender.send("swing", {
+      active: true,
+      anchorX: 0,
+      anchorY: 10,
+      anchorZ: 6,
+    });
+    await new Promise((resolve) => setTimeout(resolve, 20));
+
+    expect(senderState.isSwinging).toBe(true);
+    expect(senderState.swingAnchorY).toBe(10);
+    expect(observerState.isSwinging).toBe(false);
+
+    sender.send("swing", {
+      active: true,
+      anchorX: 0,
+      anchorY: 28,
+      anchorZ: 40,
+    });
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    expect(senderState.swingAnchorY).toBe(28);
+    expect(senderState.swingAnchorZ).toBe(40);
+
+    sender.send("swing", {
+      active: true,
+      anchorX: 0,
+      anchorY: 28,
+      anchorZ: 100001,
+    });
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    expect(senderState.swingAnchorZ).toBe(40);
+
+    sender.send("swing", {
+      active: false,
+      anchorX: 0,
+      anchorY: 0,
+      anchorZ: 0,
+    });
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    expect(senderState.isSwinging).toBe(false);
+
+    await Promise.all([sender.leave(), observer.leave()]);
+  });
+
+  it("synchronizes valid animation states only for the sending player", async () => {
+    const room = await colyseus.createRoom("spider_room");
+    const sender = await colyseus.connectTo(room);
+    const observer = await colyseus.connectTo(room);
+    const senderState = room.state.players.get(sender.sessionId)!;
+    const observerState = room.state.players.get(observer.sessionId)!;
+
+    expect(senderState.animationState).toBe(0);
+    sender.send("animation", { state: 3 });
+    await new Promise((resolve) => setTimeout(resolve, 20));
+
+    expect(senderState.animationState).toBe(3);
+    expect(observerState.animationState).toBe(0);
+
+    sender.send("animation", { state: 6 });
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    expect(senderState.animationState).toBe(3);
+
+    sender.send("animation", { state: 2.5 });
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    expect(senderState.animationState).toBe(3);
+
     await Promise.all([sender.leave(), observer.leave()]);
   });
 });

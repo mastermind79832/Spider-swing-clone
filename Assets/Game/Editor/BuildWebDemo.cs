@@ -18,7 +18,7 @@ namespace SpiderSwing.Editor
             PlayerSettings.SetManagedStrippingLevel(webTarget, ManagedStrippingLevel.Low);
             PlayerSettings.SetIl2CppCodeGeneration(webTarget, Il2CppCodeGeneration.OptimizeSize);
             PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Brotli;
-            PlayerSettings.WebGL.decompressionFallback = false;
+            PlayerSettings.WebGL.decompressionFallback = true;
             PlayerSettings.WebGL.debugSymbolMode = WebGLDebugSymbolMode.Off;
 
             // This folder is generated output only. Clearing it avoids stale files

@@ -24,11 +24,20 @@ namespace SpiderSwing.Gameplay
         public static float MoveSpeedForLevel(
             float baseMoveSpeed,
             int level,
-            float movementSpeedPerLevel)
+            float movementSpeedPerLevel,
+            float maximumTravelSpeed = float.PositiveInfinity)
         {
             var levelOffset = Mathf.Max(0, level - 1);
-            return Mathf.Max(0f, baseMoveSpeed)
+            var uncappedSpeed = Mathf.Max(0f, baseMoveSpeed)
                 + levelOffset * Mathf.Max(0f, movementSpeedPerLevel);
+            return ClampTravelSpeed(uncappedSpeed, maximumTravelSpeed);
+        }
+
+        public static float ClampTravelSpeed(float speed, float maximumTravelSpeed)
+        {
+            return Mathf.Min(
+                Mathf.Max(0f, speed),
+                Mathf.Max(0f, maximumTravelSpeed));
         }
 
         public static float SwingMultiplierForLevel(
@@ -64,15 +73,13 @@ namespace SpiderSwing.Gameplay
             int currentLevel,
             float currentXp,
             float addedXp,
-            int maximumLevel,
             float baseXpToNextLevel)
         {
-            var maxLevel = Mathf.Max(1, maximumLevel);
-            var level = Mathf.Clamp(currentLevel, 1, maxLevel);
+            var level = Mathf.Max(1, currentLevel);
             var xp = Mathf.Max(0f, currentXp) + Mathf.Max(0f, addedXp);
             var levelsGained = 0;
 
-            while (level < maxLevel)
+            while (level < int.MaxValue)
             {
                 var threshold = RequiredXpForLevel(level, baseXpToNextLevel);
                 if (threshold <= 0f || xp < threshold)
@@ -85,18 +92,24 @@ namespace SpiderSwing.Gameplay
                 levelsGained++;
             }
 
-            if (level >= maxLevel)
-            {
-                level = maxLevel;
-                xp = 0f;
-            }
-
             return new ProgressionResolution
             {
                 level = level,
                 xp = xp,
                 levelsGained = levelsGained,
             };
+        }
+
+        // Kept as a source-compatible overload for older callers. Progression is intentionally uncapped;
+        // the former maximum-level argument is ignored.
+        public static ProgressionResolution ResolveXp(
+            int currentLevel,
+            float currentXp,
+            float addedXp,
+            int ignoredMaximumLevel,
+            float baseXpToNextLevel)
+        {
+            return ResolveXp(currentLevel, currentXp, addedXp, baseXpToNextLevel);
         }
     }
 }

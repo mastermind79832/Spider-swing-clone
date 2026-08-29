@@ -221,6 +221,91 @@ namespace SpiderSwing.Editor
             Debug.Log("Spider Swing Milestone 3C training, upgrades, and point labels setup completed.");
         }
 
+        [MenuItem("Spider Swing/Apply Milestone 3D - Arm Swing Visuals")]
+        public static void ApplyArmSwingVisuals()
+        {
+            var scene = EditorSceneManager.OpenScene(GameplayScenePath, OpenSceneMode.Single);
+            var player = GameObject.Find("LocalPlayerMarker");
+            if (player == null)
+            {
+                throw new InvalidOperationException(
+                    "Milestone 3D setup requires the Gameplay scene with LocalPlayerMarker.");
+            }
+
+            var modelRoot = FindChild(player.transform, "base_rig");
+            var upperArm = FindChild(modelRoot, "ArmR1");
+            var lowerArm = FindChild(modelRoot, "ArmR2");
+            if (modelRoot == null || upperArm == null || lowerArm == null)
+            {
+                throw new InvalidOperationException(
+                    "Milestone 3D setup requires base_rig/Armature.001/ArmR1 and ArmR2.");
+            }
+
+            var webLine = EnsureComponent<LineRenderer>(player);
+            ConfigureWebLine(webLine);
+            var webOrigin = EnsureWebOrigin(lowerArm, upperArm);
+            var swingVisual = EnsureComponent<PlayerSwingVisual>(player);
+            swingVisual.Configure(modelRoot, upperArm, lowerArm, webOrigin, webLine);
+
+            var controller = player.GetComponent<LocalPlayerController>();
+            if (controller != null)
+            {
+                controller.ConfigureWorld(
+                    GameObject.Find("SwingForbiddenZone")?.GetComponent<SwingForbiddenZone>(),
+                    player.GetComponent<PlayerDeathController>(),
+                    webLine);
+                EditorUtility.SetDirty(controller);
+            }
+
+            EditorUtility.SetDirty(swingVisual);
+            EditorUtility.SetDirty(webOrigin);
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene, GameplayScenePath);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            Debug.Log("Spider Swing Milestone 3D arm-origin swing visual setup completed.");
+        }
+
+        [MenuItem("Spider Swing/Apply Milestone 3F - Player Animations")]
+        public static void ApplyPlayerAnimations()
+        {
+            var scene = EditorSceneManager.OpenScene(GameplayScenePath, OpenSceneMode.Single);
+            var player = GameObject.Find("LocalPlayerMarker");
+            var camera = Camera.main;
+            var actions = AssetDatabase.LoadAssetAtPath<InputActionAsset>(InputActionsPath);
+            if (player == null || camera == null || actions == null)
+            {
+                throw new InvalidOperationException(
+                    "Milestone 3F setup requires Gameplay, Main Camera, LocalPlayerMarker, and InputSystem_Actions.");
+            }
+
+            var modelRoot = FindChild(player.transform, "base_rig");
+            var animator = modelRoot != null
+                ? modelRoot.GetComponent<Animator>() ?? modelRoot.GetComponentInChildren<Animator>(true)
+                : null;
+            if (modelRoot == null || animator == null || animator.runtimeAnimatorController == null)
+            {
+                throw new InvalidOperationException(
+                    "Milestone 3F setup requires LocalPlayerMarker/base_rig with the authored PlayerAnim controller.");
+            }
+
+            var config = EnsureBalanceConfig();
+            var orbitCamera = EnsureComponent<OrbitCamera>(camera.gameObject);
+            var localController = EnsureComponent<LocalPlayerController>(player);
+            var animationController = EnsureComponent<PlayerAnimationController>(player);
+            orbitCamera.Configure(actions, player.transform);
+            localController.Configure(actions, orbitCamera, config);
+            animationController.Configure(modelRoot, animator, config.animationBlendDuration);
+
+            EditorUtility.SetDirty(animationController);
+            EditorUtility.SetDirty(localController);
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene, GameplayScenePath);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            Debug.Log("Spider Swing Milestone 3F player animation setup completed.");
+        }
+
         [MenuItem("Spider Swing/Repair Upgrade Pad Components")]
         public static void RepairUpgradePadComponents()
         {
@@ -382,6 +467,8 @@ namespace SpiderSwing.Editor
             config.rotationSharpness = 14f;
             config.gravity = -24f;
             config.jumpHeight = 6f;
+            config.jumpLandingGraceDuration = 0.12f;
+            config.maximumTravelSpeed = 50f;
             config.maxSwings = 2;
             config.swingDuration = 1.25f;
             config.swingForwardMultiplier = 1f;
@@ -389,21 +476,21 @@ namespace SpiderSwing.Editor
                 new Keyframe(0f, 0f),
                 new Keyframe(0.5f, -2f),
                 new Keyframe(1f, 6f));
-            config.webAnchorForwardOffset = 6f;
-            config.webAnchorHeightOffset = 10f;
+            config.webAnchorHeightOffset = 20f;
             config.respawnDelay = 1f;
             config.releaseVelocityMinimum = -12f;
             config.releaseVelocityMaximum = 12f;
             config.sideDeathX = 45f;
             config.deathY = -20f;
             config.maximumY = 60f;
-            config.maximumLevel = 10;
             config.xpMultiplier = 1f;
             config.baseXpToNextLevel = 100f;
-            config.movementSpeedPerLevel = 0.75f;
+            config.movementSpeedPerLevel = 1.25f;
             config.swingForwardMultiplierPerLevel = 0.15f;
             config.extraSwingEveryLevels = 2;
             config.treadmillXpPerSecond = 10f;
+            config.animationBlendDuration = 0.1f;
+            config.landingRecoveryDuration = 0.4f;
             EditorUtility.SetDirty(config);
             return config;
         }
@@ -573,6 +660,11 @@ namespace SpiderSwing.Editor
 
         private static Transform FindChild(Transform root, string childName)
         {
+            if (root == null)
+            {
+                return null;
+            }
+
             if (root.name == childName)
             {
                 return root;
@@ -588,6 +680,46 @@ namespace SpiderSwing.Editor
             }
 
             return null;
+        }
+
+        private static Transform EnsureWebOrigin(Transform lowerArm, Transform upperArm)
+        {
+            var origin = FindChild(lowerArm, "RightWebOrigin");
+            if (origin == null)
+            {
+                var socket = new GameObject("RightWebOrigin");
+                origin = socket.transform;
+                origin.SetParent(lowerArm, false);
+            }
+
+            var worldLength = GetLowerArmLength(lowerArm, upperArm);
+            var localScale = Mathf.Max(0.001f, Mathf.Abs(lowerArm.lossyScale.y));
+            origin.localPosition = Vector3.up * Mathf.Max(0.005f, worldLength / localScale);
+            origin.localRotation = Quaternion.identity;
+            origin.localScale = Vector3.one;
+            return origin;
+        }
+
+        private static float GetLowerArmLength(Transform lowerArm, Transform upperArm)
+        {
+            for (var index = 0; lowerArm != null && index < lowerArm.childCount; index++)
+            {
+                var child = lowerArm.GetChild(index);
+                if (child.name == "RightWebOrigin")
+                {
+                    continue;
+                }
+
+                var childLength = Vector3.Distance(lowerArm.position, child.position);
+                if (childLength > 0.0001f)
+                {
+                    return childLength;
+                }
+            }
+
+            return upperArm != null && lowerArm != null
+                ? Vector3.Distance(upperArm.position, lowerArm.position)
+                : 0.6f;
         }
 
         private static GameObject EnsureObject(string objectName, Transform parent)

@@ -26,6 +26,8 @@ namespace SpiderSwing.Gameplay
         [SerializeField] private PlayerProgression progression;
         [SerializeField] private LineRenderer webLine;
         [SerializeField] private Transform webOrigin;
+        [SerializeField] private PlayerSwingVisual swingVisual;
+        [SerializeField] private PlayerAnimationController animationController;
 
         private CharacterController characterController;
         private InputAction moveAction;
@@ -37,19 +39,28 @@ namespace SpiderSwing.Gameplay
         private PlayerMovementState state = PlayerMovementState.Grounded;
         private Vector3 swingDirection;
         private Vector3 swingAnchor;
+        private float swingHorizontalSpeed;
         private float swingElapsed;
         private float swingStartY;
         private CoursePlatform lastTopPlatform;
         private Material runtimeWebMaterial;
         private bool initialized;
+        private bool swingVisualActive;
+        private float landingRecoveryRemaining;
+        private bool landingExitBlendStarted;
+        private float jumpLandingGraceRemaining;
 
         public event Action<float> OnTraversalDistanceMoved;
+        public event Action<bool, Vector3> OnSwingStateChanged;
 
         public PlayerMovementState State => state;
         public bool IsGrounded => characterController != null
-            && (characterController.isGrounded || HasGroundBelow());
+            && HasGroundContact()
+            && (state == PlayerMovementState.Grounded
+                || (jumpLandingGraceRemaining <= 0f && verticalVelocity <= 0f));
         public bool IsSwinging => state == PlayerMovementState.Swinging;
         public bool IsDead => state == PlayerMovementState.Dead;
+        public bool IsLandingRecovery => state == PlayerMovementState.Landing;
         public bool IsWebVisible => webLine != null && webLine.enabled;
         public float VerticalVelocity => verticalVelocity;
         public int CurrentSwings => currentSwings;
@@ -61,8 +72,15 @@ namespace SpiderSwing.Gameplay
         public int BaseMaxSwings => balanceConfig != null ? Mathf.Max(1, balanceConfig.maxSwings) : 2;
         public float MoveSpeed => moveSpeed;
         public float SwingForwardMultiplier => swingForwardMultiplier;
+        public float MaximumTravelSpeed => balanceConfig != null
+            ? Mathf.Max(1f, balanceConfig.maximumTravelSpeed)
+            : 50f;
         public Vector3 SwingDirection => swingDirection;
+        public Vector3 SwingAnchor => swingAnchor;
+        public float SwingHorizontalSpeed => swingHorizontalSpeed;
         public float SwingElapsed => swingElapsed;
+        public float JumpLandingGraceRemaining => jumpLandingGraceRemaining;
+        public PlayerAnimationController AnimationController => animationController;
 
         public void Configure(InputActionAsset actions, OrbitCamera cameraController)
         {
@@ -80,6 +98,9 @@ namespace SpiderSwing.Gameplay
 
             ApplyBalance();
             ResolveInputActions();
+            animationController?.Configure(configuredBlendDuration: GetBalanceValue(
+                value => value.animationBlendDuration,
+                0.1f));
             if (isActiveAndEnabled)
             {
                 moveAction?.Enable();
@@ -95,9 +116,13 @@ namespace SpiderSwing.Gameplay
             swingForbiddenZone = forbiddenZone;
             deathController = configuredDeathController;
             webLine = configuredWebLine != null ? configuredWebLine : webLine;
+            swingVisual = swingVisual != null
+                ? swingVisual
+                : GetComponent<PlayerSwingVisual>();
             checkpointProgress = GetComponent<PlayerCheckpointProgress>();
             demoRewards = GetComponent<PlayerDemoRewards>();
             ConfigureWebLine();
+            swingVisual?.Configure(configuredWebLine: webLine, configuredWebOrigin: webOrigin);
         }
 
         private void Awake()
@@ -106,6 +131,8 @@ namespace SpiderSwing.Gameplay
             checkpointProgress = GetComponent<PlayerCheckpointProgress>();
             demoRewards = GetComponent<PlayerDemoRewards>();
             progression = GetComponent<PlayerProgression>();
+            swingVisual = GetComponent<PlayerSwingVisual>();
+            animationController = GetComponent<PlayerAnimationController>();
             characterController.height = 2f;
             characterController.radius = 0.45f;
             characterController.center = Vector3.zero;
@@ -119,7 +146,11 @@ namespace SpiderSwing.Gameplay
 
             ApplyBalance();
             ResolveInputActions();
+            animationController?.Configure(configuredBlendDuration: GetBalanceValue(
+                value => value.animationBlendDuration,
+                0.1f));
             ConfigureWebLine();
+            swingVisual?.Configure(configuredWebLine: webLine, configuredWebOrigin: webOrigin);
             initialized = true;
         }
 
@@ -133,6 +164,7 @@ namespace SpiderSwing.Gameplay
         {
             moveAction?.Disable();
             jumpAction?.Disable();
+            SetSwingVisualState(false);
         }
 
         private void OnDestroy()
@@ -147,7 +179,9 @@ namespace SpiderSwing.Gameplay
         {
             if (balanceConfig != null)
             {
-                moveSpeed = balanceConfig.moveSpeed;
+                moveSpeed = ProgressionRules.ClampTravelSpeed(
+                    balanceConfig.moveSpeed,
+                    balanceConfig.maximumTravelSpeed);
                 rotationSharpness = balanceConfig.rotationSharpness;
                 gravity = balanceConfig.gravity;
                 jumpHeight = balanceConfig.jumpHeight;
@@ -210,10 +244,30 @@ namespace SpiderSwing.Gameplay
             }
         }
 
+        private void StartJump()
+        {
+            verticalVelocity = SwingRules.EvaluateJumpVelocity(jumpHeight, gravity);
+            jumpLandingGraceRemaining = Mathf.Max(
+                0f,
+                GetBalanceValue(value => value.jumpLandingGraceDuration, 0.12f));
+            state = PlayerMovementState.Airborne;
+            SetAnimationState(PlayerAnimationState.Jump);
+        }
+
         private void Update()
         {
+            jumpLandingGraceRemaining = Mathf.Max(
+                0f,
+                jumpLandingGraceRemaining - Mathf.Max(0f, Time.deltaTime));
+
             if (state == PlayerMovementState.Dead)
             {
+                return;
+            }
+
+            if (state == PlayerMovementState.Landing)
+            {
+                UpdateLandingRecovery(Time.deltaTime);
                 return;
             }
 
@@ -223,7 +277,10 @@ namespace SpiderSwing.Gameplay
                 return;
             }
 
-            var grounded = characterController.isGrounded || HasGroundBelow();
+            var groundedContact = HasGroundContact();
+            var grounded = groundedContact
+                && (state == PlayerMovementState.Grounded
+                    || (jumpLandingGraceRemaining <= 0f && verticalVelocity <= 0f));
             if (grounded && state != PlayerMovementState.Grounded)
             {
                 state = PlayerMovementState.Grounded;
@@ -238,8 +295,7 @@ namespace SpiderSwing.Gameplay
             {
                 if (grounded)
                 {
-                    verticalVelocity = SwingRules.EvaluateJumpVelocity(jumpHeight, gravity);
-                    state = PlayerMovementState.Airborne;
+                    StartJump();
                 }
                 else if (TryStartSwing())
                 {
@@ -256,6 +312,13 @@ namespace SpiderSwing.Gameplay
             var velocity = movement * moveSpeed;
             velocity.y = verticalVelocity;
             MoveAndTrack(velocity * Time.deltaTime, grounded);
+
+            if (state == PlayerMovementState.Grounded)
+            {
+                SetAnimationState(movement.sqrMagnitude > 0.001f
+                    ? PlayerAnimationState.Walk
+                    : PlayerAnimationState.Idle);
+            }
         }
 
         public bool TryStartSwing()
@@ -283,13 +346,21 @@ namespace SpiderSwing.Gameplay
             currentSwings--;
             swingElapsed = 0f;
             swingStartY = transform.position.y;
-            swingAnchor = transform.position
-                + swingDirection * GetBalanceValue(value => value.webAnchorForwardOffset, 6f)
-                + Vector3.up * GetBalanceValue(value => value.webAnchorHeightOffset, 10f);
+            var duration = GetBalanceValue(value => value.swingDuration, 1.25f);
+            swingHorizontalSpeed = ProgressionRules.ClampTravelSpeed(
+                moveSpeed * swingForwardMultiplier,
+                MaximumTravelSpeed);
+            swingAnchor = SwingRules.CalculateProjectedAnchor(
+                transform.position,
+                swingDirection,
+                swingHorizontalSpeed,
+                duration,
+                GetSwingCurve(),
+                GetBalanceValue(value => value.webAnchorHeightOffset, 20f));
             state = PlayerMovementState.Swinging;
             verticalVelocity = 0f;
-            SetWebVisible(true);
-            UpdateWebLine();
+            SetAnimationState(PlayerAnimationState.SwingBack);
+            SetSwingVisualState(true);
             return true;
         }
 
@@ -304,21 +375,23 @@ namespace SpiderSwing.Gameplay
             }
 
             swingElapsed = Mathf.Min(duration, swingElapsed + Mathf.Max(0f, deltaTime));
+            SetSwingAnimationState(duration);
             var desiredY = SwingRules.EvaluateVertical(
                 swingStartY,
                 GetSwingCurve(),
                 swingElapsed,
                 duration);
             var delta = swingDirection
-                * moveSpeed
-                * swingForwardMultiplier
+                * swingHorizontalSpeed
                 * deltaTime;
             delta.y = desiredY - transform.position.y;
 
             MoveAndTrack(delta, false);
             UpdateWebLine();
 
-            if (state == PlayerMovementState.Dead || state == PlayerMovementState.Grounded)
+            if (state == PlayerMovementState.Dead
+                || state == PlayerMovementState.Grounded
+                || state == PlayerMovementState.Landing)
             {
                 return;
             }
@@ -331,8 +404,10 @@ namespace SpiderSwing.Gameplay
 
         private void EndSwingAtDuration()
         {
-            SetWebVisible(false);
+            SetSwingVisualState(false);
             state = PlayerMovementState.Airborne;
+            SetAnimationState(PlayerAnimationState.Jump);
+            swingHorizontalSpeed = 0f;
             verticalVelocity = SwingRules.EvaluateExitVelocity(
                 GetSwingCurve(),
                 1f,
@@ -345,8 +420,10 @@ namespace SpiderSwing.Gameplay
         {
             var duration = GetBalanceValue(value => value.swingDuration, 1.25f);
             var normalizedTime = duration > 0f ? swingElapsed / duration : 1f;
-            SetWebVisible(false);
+            SetSwingVisualState(false);
             state = PlayerMovementState.Airborne;
+            SetAnimationState(PlayerAnimationState.Jump);
+            swingHorizontalSpeed = 0f;
             verticalVelocity = SwingRules.EvaluateExitVelocity(
                 GetSwingCurve(),
                 normalizedTime,
@@ -362,17 +439,27 @@ namespace SpiderSwing.Gameplay
                 return;
             }
 
-            SetWebVisible(false);
+            SetSwingVisualState(false);
+            landingRecoveryRemaining = 0f;
+            landingExitBlendStarted = false;
+            jumpLandingGraceRemaining = 0f;
             state = PlayerMovementState.Dead;
+            SetAnimationState(PlayerAnimationState.Jump);
+            swingHorizontalSpeed = 0f;
             verticalVelocity = 0f;
         }
 
         public void ResetAfterRespawn()
         {
-            SetWebVisible(false);
+            SetSwingVisualState(false);
+            landingRecoveryRemaining = 0f;
+            landingExitBlendStarted = false;
+            jumpLandingGraceRemaining = 0f;
             currentSwings = maxSwings;
+            swingHorizontalSpeed = 0f;
             verticalVelocity = -2f;
             state = PlayerMovementState.Grounded;
+            SetAnimationState(PlayerAnimationState.Idle);
         }
 
         public void ApplyProgressionStats(
@@ -380,7 +467,9 @@ namespace SpiderSwing.Gameplay
             float configuredSwingForwardMultiplier,
             int configuredMaxSwings)
         {
-            moveSpeed = Mathf.Max(0f, configuredMoveSpeed);
+            moveSpeed = ProgressionRules.ClampTravelSpeed(
+                configuredMoveSpeed,
+                MaximumTravelSpeed);
             swingForwardMultiplier = Mathf.Max(0f, configuredSwingForwardMultiplier);
             var previousMaximum = maxSwings;
             maxSwings = Mathf.Max(1, configuredMaxSwings);
@@ -419,6 +508,11 @@ namespace SpiderSwing.Gameplay
             var previousPosition = transform.position;
             var flags = characterController.Move(delta);
             ClampMaximumY();
+            if ((flags & CollisionFlags.Above) != 0 && verticalVelocity > 0f)
+            {
+                verticalVelocity = 0f;
+            }
+
             var nowGrounded = characterController.isGrounded
                 || (flags & CollisionFlags.Below) != 0
                 || HasGroundBelow();
@@ -445,7 +539,13 @@ namespace SpiderSwing.Gameplay
                 return;
             }
 
-            if (nowGrounded)
+            var canStartLanding = LandingRules.CanStartRecovery(
+                state,
+                nowGrounded,
+                delta.y,
+                jumpLandingGraceRemaining);
+
+            if (canStartLanding)
             {
                 if (lastTopPlatform == null)
                 {
@@ -456,15 +556,22 @@ namespace SpiderSwing.Gameplay
 
                 if (state == PlayerMovementState.Swinging)
                 {
-                    SetWebVisible(false);
+                    SetSwingVisualState(false);
+                    swingHorizontalSpeed = 0f;
                 }
 
-                state = PlayerMovementState.Grounded;
                 verticalVelocity = -2f;
+                jumpLandingGraceRemaining = 0f;
+                BeginLandingRecovery();
             }
-            else if (state == PlayerMovementState.Grounded)
+            else if (nowGrounded && state == PlayerMovementState.Grounded)
+            {
+                RegisterTopLanding(FindTopPlatformBelow());
+            }
+            else if (!nowGrounded && state == PlayerMovementState.Grounded)
             {
                 state = PlayerMovementState.Airborne;
+                SetAnimationState(PlayerAnimationState.Jump);
             }
 
             deathController?.CheckPosition(transform.position);
@@ -497,7 +604,12 @@ namespace SpiderSwing.Gameplay
 
         private void OnControllerColliderHit(ControllerColliderHit hit)
         {
-            if (CoursePlatform.IsTopLanding(hit.normal))
+            var canRegisterPlatform = state == PlayerMovementState.Grounded
+                || ((state == PlayerMovementState.Airborne
+                        || state == PlayerMovementState.Swinging)
+                    && jumpLandingGraceRemaining <= 0f
+                    && verticalVelocity <= 0f);
+            if (canRegisterPlatform && CoursePlatform.IsTopLanding(hit.normal))
             {
                 RegisterTopLanding(hit.collider.GetComponentInParent<CoursePlatform>());
             }
@@ -547,6 +659,12 @@ namespace SpiderSwing.Gameplay
                 0.25f,
                 Physics.DefaultRaycastLayers,
                 QueryTriggerInteraction.Ignore);
+        }
+
+        private bool HasGroundContact()
+        {
+            return characterController != null
+                && (characterController.isGrounded || HasGroundBelow());
         }
 
         private void RotateTowards(Vector3 movement)
@@ -602,6 +720,48 @@ namespace SpiderSwing.Gameplay
 
         private void SetWebVisible(bool visible)
         {
+            SetSwingVisualState(visible);
+        }
+
+        private void SetSwingVisualState(bool active)
+        {
+            if (active)
+            {
+                swingVisualActive = true;
+                if (swingVisual != null)
+                {
+                    swingVisual.SetSwingState(true, swingAnchor);
+                }
+                else
+                {
+                    SetLegacyWebVisible(true);
+                }
+
+                OnSwingStateChanged?.Invoke(true, swingAnchor);
+                return;
+            }
+
+            if (!swingVisualActive)
+            {
+                SetLegacyWebVisible(false);
+                return;
+            }
+
+            swingVisualActive = false;
+            if (swingVisual != null)
+            {
+                swingVisual.SetSwingState(false, swingAnchor);
+            }
+            else
+            {
+                SetLegacyWebVisible(false);
+            }
+
+            OnSwingStateChanged?.Invoke(false, swingAnchor);
+        }
+
+        private void SetLegacyWebVisible(bool visible)
+        {
             if (webLine != null)
             {
                 webLine.enabled = visible;
@@ -610,6 +770,12 @@ namespace SpiderSwing.Gameplay
 
         private void UpdateWebLine()
         {
+            if (swingVisual != null)
+            {
+                swingVisual.SetSwingAnchor(swingAnchor);
+                return;
+            }
+
             if (webLine == null || !webLine.enabled)
             {
                 return;
@@ -620,6 +786,73 @@ namespace SpiderSwing.Gameplay
                 : transform.position + Vector3.up;
             webLine.SetPosition(0, origin);
             webLine.SetPosition(1, swingAnchor);
+        }
+
+        private void BeginLandingRecovery()
+        {
+            jumpLandingGraceRemaining = 0f;
+            state = PlayerMovementState.Landing;
+            landingRecoveryRemaining = Mathf.Max(
+                0f,
+                GetBalanceValue(value => value.landingRecoveryDuration, 0.4f));
+            landingExitBlendStarted = false;
+            SetAnimationState(PlayerAnimationState.Landing);
+
+            if (landingRecoveryRemaining <= 0f)
+            {
+                state = PlayerMovementState.Grounded;
+                SetGroundAnimationState();
+            }
+        }
+
+        private void UpdateLandingRecovery(float deltaTime)
+        {
+            landingRecoveryRemaining = Mathf.Max(
+                0f,
+                landingRecoveryRemaining - Mathf.Max(0f, deltaTime));
+
+            var blendDuration = GetBalanceValue(
+                value => value.animationBlendDuration,
+                0.1f);
+            if (!landingExitBlendStarted
+                && landingRecoveryRemaining <= Mathf.Min(blendDuration, GetBalanceValue(
+                    value => value.landingRecoveryDuration,
+                    0.4f)))
+            {
+                landingExitBlendStarted = true;
+                SetGroundAnimationState();
+            }
+
+            if (landingRecoveryRemaining > 0f)
+            {
+                return;
+            }
+
+            state = PlayerMovementState.Grounded;
+            SetGroundAnimationState();
+        }
+
+        private void SetGroundAnimationState()
+        {
+            var movement = GetCameraRelativeMovement(moveAction != null
+                ? moveAction.ReadValue<Vector2>()
+                : Vector2.zero);
+            SetAnimationState(movement.sqrMagnitude > 0.001f
+                ? PlayerAnimationState.Walk
+                : PlayerAnimationState.Idle);
+        }
+
+        private void SetSwingAnimationState(float duration)
+        {
+            var normalizedTime = duration > 0f ? swingElapsed / duration : 1f;
+            SetAnimationState(normalizedTime < 0.5f
+                ? PlayerAnimationState.SwingBack
+                : PlayerAnimationState.SwingForward);
+        }
+
+        private void SetAnimationState(PlayerAnimationState animationState)
+        {
+            animationController?.SetState(animationState);
         }
 
         private void OnGUI()

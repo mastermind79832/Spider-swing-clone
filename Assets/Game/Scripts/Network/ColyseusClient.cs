@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Colyseus;
 using Colyseus.Schema;
@@ -15,7 +16,7 @@ namespace SpiderSwing.Network
     /// </summary>
     public sealed class ColyseusClient : MonoBehaviour
     {
-        [SerializeField] private string endpoint = "ws://localhost:2567";
+        [SerializeField] private string endpoint = "wss://variations-absorption-ent-procedure.trycloudflare.com";
         [SerializeField] private string roomName = "spider_room";
         [SerializeField] private Transform localPlayerMarker;
         [SerializeField] private Transform remotePlayerRoot;
@@ -31,11 +32,18 @@ namespace SpiderSwing.Network
         private float nextTransformSendTime;
         private bool isSendingTransform;
         private bool isSendingSkin;
+        private bool isSendingAnimation;
+        private bool isConnecting;
+        private bool isDestroying;
+        private CancellationTokenSource connectionCancellation;
         private PlayerUpgradeState localUpgradeState;
         private PlayerSkinVisual localSkinVisual;
+        private LocalPlayerController localPlayerController;
+        private PlayerAnimationController localAnimationController;
         private readonly Dictionary<string, SkinMaterials> skinCatalog = new Dictionary<string, SkinMaterials>();
 
         private const string DefaultSkinId = "Default";
+        private const float MaxConnectionDurationSeconds = 90f;
 
         private readonly struct SkinMaterials
         {
@@ -51,18 +59,30 @@ namespace SpiderSwing.Network
 
         private sealed class RemotePlayerView
         {
-            public RemotePlayerView(GameObject marker, Transform visualRoot, Vector3 position, float yaw)
+            public RemotePlayerView(
+                GameObject marker,
+                Transform visualRoot,
+                PlayerSwingVisual swingVisual,
+                PlayerAnimationController animationController,
+                Vector3 position,
+                float yaw)
             {
                 Marker = marker;
                 VisualRoot = visualRoot;
+                SwingVisual = swingVisual;
+                AnimationController = animationController;
                 TargetPosition = position;
                 TargetYaw = yaw;
             }
 
             public GameObject Marker { get; }
             public Transform VisualRoot { get; }
+            public PlayerSwingVisual SwingVisual { get; }
+            public PlayerAnimationController AnimationController { get; }
             public Vector3 TargetPosition { get; set; }
             public float TargetYaw { get; set; }
+            public bool IsSwinging { get; set; }
+            public Vector3 SwingAnchor { get; set; }
         }
 
         public void SetLocalPlayerMarker(Transform marker)
@@ -70,46 +90,219 @@ namespace SpiderSwing.Network
             localPlayerMarker = marker;
         }
 
-        private async void Start()
+        private void Start()
         {
             ResolveLocalSkinState();
             BuildSkinCatalog();
-            await Connect();
+            BeginConnect();
         }
 
-        private async Task Connect()
+        private void BeginConnect()
         {
-            status = "Connecting...";
+            if (isDestroying || isConnecting)
+            {
+                return;
+            }
+
+            connectionCancellation?.Cancel();
+            connectionCancellation?.Dispose();
+            connectionCancellation = new CancellationTokenSource();
+            _ = ConnectWithRetry(connectionCancellation.Token);
+        }
+
+        private async Task ConnectWithRetry(CancellationToken cancellationToken)
+        {
+            if (isConnecting)
+            {
+                return;
+            }
+
+            isConnecting = true;
             lastError = string.Empty;
+            var startedAt = Time.realtimeSinceStartup;
+            var attempt = 0;
 
             try
             {
-                client = new Client(endpoint);
-                room = await client.JoinOrCreate<DynamicSchema>(roomName);
-                room.OnLeave += code => status = $"Disconnected ({code})";
-                room.OnError += (code, message) =>
+                while (!cancellationToken.IsCancellationRequested
+                       && !isDestroying
+                       && Time.realtimeSinceStartup - startedAt < MaxConnectionDurationSeconds)
                 {
-                    lastError = $"Room error {code}: {message}";
-                    status = "Error";
-                };
+                    attempt++;
+                    status = attempt == 1
+                        ? "Connecting..."
+                        : $"Waking multiplayer server... (attempt {attempt})";
 
-                var callbacks = Callbacks.Get(room);
-                callbacks.OnAdd<DynamicSchema>("players", (key, player) =>
+                    try
+                    {
+                        await ConnectOnce(cancellationToken);
+                        return;
+                    }
+                    catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+                    {
+                        return;
+                    }
+                    catch (Exception exception)
+                    {
+                        lastError = exception.Message;
+                        Debug.LogWarning($"Multiplayer connection attempt {attempt} failed: {exception.Message}", this);
+                        await LeaveCurrentRoom();
+                    }
+
+                    var elapsed = Time.realtimeSinceStartup - startedAt;
+                    var remaining = MaxConnectionDurationSeconds - elapsed;
+                    if (remaining <= 0f)
+                    {
+                        break;
+                    }
+
+                    var delay = Mathf.Min(GetRetryDelaySeconds(attempt), remaining);
+                    try
+                    {
+                        await Task.Delay(TimeSpan.FromSeconds(delay), cancellationToken);
+                    }
+                    catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+                    {
+                        return;
+                    }
+                }
+
+                if (!cancellationToken.IsCancellationRequested && !isDestroying)
                 {
-                    AddOrUpdatePlayer(key, player);
-                    callbacks.OnChange(player, () => AddOrUpdatePlayer(key, player));
-                });
-                callbacks.OnRemove<DynamicSchema>("players", (key, player) => RemovePlayer(key));
+                    status = "Connection failed";
+                    if (string.IsNullOrEmpty(lastError))
+                    {
+                        lastError = "The multiplayer server did not become available.";
+                    }
+                }
+            }
+            finally
+            {
+                isConnecting = false;
+            }
+        }
 
-                await room.WaitForFirstState();
-                status = "Connected";
-                await SendLocalSkin(localUpgradeState != null ? localUpgradeState.CurrentSkinId : DefaultSkinId);
+        private async Task ConnectOnce(CancellationToken cancellationToken)
+        {
+            client = new Client(ResolveEndpoint());
+            var joinedRoom = await client.JoinOrCreate<DynamicSchema>(roomName);
+            if (cancellationToken.IsCancellationRequested || isDestroying)
+            {
+                await joinedRoom.Leave();
+                cancellationToken.ThrowIfCancellationRequested();
+                return;
+            }
+
+            room = joinedRoom;
+            joinedRoom.OnLeave += code =>
+            {
+                if (room != joinedRoom)
+                {
+                    return;
+                }
+
+                room = null;
+                ClearRemotePlayers();
+                status = $"Disconnected ({code})";
+                if (!isDestroying)
+                {
+                    BeginConnect();
+                }
+            };
+            joinedRoom.OnError += (code, message) =>
+            {
+                if (room != joinedRoom)
+                {
+                    return;
+                }
+
+                lastError = $"Room error {code}: {message}";
+                status = "Error";
+            };
+
+            var callbacks = Callbacks.Get(joinedRoom);
+            callbacks.OnAdd<DynamicSchema>("players", (key, player) =>
+            {
+                AddOrUpdatePlayer(key, player);
+                callbacks.OnChange(player, () => AddOrUpdatePlayer(key, player));
+            });
+            callbacks.OnRemove<DynamicSchema>("players", (key, player) => RemovePlayer(key));
+
+            await joinedRoom.WaitForFirstState();
+            cancellationToken.ThrowIfCancellationRequested();
+            status = "Connected";
+            await SendLocalSkin(localUpgradeState != null ? localUpgradeState.CurrentSkinId : DefaultSkinId);
+            if (localAnimationController != null)
+            {
+                await SendLocalAnimation(localAnimationController.CurrentState);
+            }
+
+            if (localPlayerController != null)
+            {
+                await SendLocalSwing(localPlayerController.IsSwinging, localPlayerController.SwingAnchor);
+            }
+        }
+
+        private string ResolveEndpoint()
+        {
+            if (Uri.TryCreate(Application.absoluteURL, UriKind.Absolute, out var pageUri))
+            {
+                const string queryKey = "server=";
+                var query = pageUri.Query;
+                var keyIndex = query.IndexOf(queryKey, StringComparison.OrdinalIgnoreCase);
+                if (keyIndex >= 0)
+                {
+                    var valueStart = keyIndex + queryKey.Length;
+                    var valueEnd = query.IndexOf('&', valueStart);
+                    if (valueEnd < 0)
+                    {
+                        valueEnd = query.Length;
+                    }
+
+                    var candidate = Uri.UnescapeDataString(query.Substring(valueStart, valueEnd - valueStart));
+                    if (candidate.StartsWith("ws://", StringComparison.OrdinalIgnoreCase)
+                        || candidate.StartsWith("wss://", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return candidate;
+                    }
+                }
+            }
+
+            return endpoint;
+        }
+
+        private static float GetRetryDelaySeconds(int attempt)
+        {
+            switch (attempt)
+            {
+                case 1:
+                    return 2f;
+                case 2:
+                    return 4f;
+                case 3:
+                    return 8f;
+                default:
+                    return 10f;
+            }
+        }
+
+        private async Task LeaveCurrentRoom()
+        {
+            var roomToLeave = room;
+            room = null;
+            ClearRemotePlayers();
+            if (roomToLeave == null)
+            {
+                return;
+            }
+
+            try
+            {
+                await roomToLeave.Leave();
             }
             catch (Exception exception)
             {
-                lastError = exception.Message;
-                status = "Connection failed";
-                Debug.LogException(exception, this);
+                Debug.LogWarning($"Unable to leave the multiplayer room cleanly: {exception.Message}", this);
             }
         }
 
@@ -134,25 +327,55 @@ namespace SpiderSwing.Network
                 player.Get<float>("z"));
             var yaw = player.Get<float>("yaw");
             var skinId = player.Get<string>("skinId") ?? DefaultSkinId;
+            var isSwinging = player.Get<bool>("isSwinging");
+            var animationState = ReadAnimationState(player);
+            var swingAnchor = new Vector3(
+                player.Get<float>("swingAnchorX"),
+                player.Get<float>("swingAnchorY"),
+                player.Get<float>("swingAnchorZ"));
 
             if (!playerMarkers.TryGetValue(key, out var remotePlayer))
             {
-                var marker = CreateRemoteMarker(key, position, yaw, out var visualRoot);
+                var marker = CreateRemoteMarker(
+                    key,
+                    position,
+                    yaw,
+                    out var visualRoot,
+                    out var swingVisual,
+                    out var animationController);
                 marker.transform.SetPositionAndRotation(position, Quaternion.Euler(0f, yaw, 0f));
-                remotePlayer = new RemotePlayerView(marker, visualRoot, position, yaw);
+                remotePlayer = new RemotePlayerView(
+                    marker,
+                    visualRoot,
+                    swingVisual,
+                    animationController,
+                    position,
+                    yaw);
                 playerMarkers.Add(key, remotePlayer);
             }
 
             remotePlayer.TargetPosition = position;
             remotePlayer.TargetYaw = yaw;
+            remotePlayer.IsSwinging = isSwinging;
+            remotePlayer.SwingAnchor = swingAnchor;
+            remotePlayer.SwingVisual?.SetSwingState(isSwinging, swingAnchor);
+            remotePlayer.AnimationController?.SetState(animationState);
             ApplyRemoteSkin(remotePlayer, skinId);
         }
 
-        private GameObject CreateRemoteMarker(string key, Vector3 position, float yaw, out Transform visualRoot)
+        private GameObject CreateRemoteMarker(
+            string key,
+            Vector3 position,
+            float yaw,
+            out Transform visualRoot,
+            out PlayerSwingVisual swingVisual,
+            out PlayerAnimationController animationController)
         {
             var marker = new GameObject($"NetworkPlayer_{key}");
             marker.transform.SetParent(remotePlayerRoot != null ? remotePlayerRoot : transform, true);
             visualRoot = null;
+            swingVisual = null;
+            animationController = null;
 
             if (localSkinVisual != null && localSkinVisual.ModelRoot != null)
             {
@@ -167,6 +390,11 @@ namespace SpiderSwing.Network
                 }
 
                 visualRoot = visual.transform;
+                swingVisual = marker.AddComponent<PlayerSwingVisual>();
+                var line = marker.AddComponent<LineRenderer>();
+                swingVisual.Configure(visualRoot, configuredWebLine: line);
+                animationController = marker.AddComponent<PlayerAnimationController>();
+                animationController.Configure(visualRoot);
                 return marker;
             }
 
@@ -176,6 +404,11 @@ namespace SpiderSwing.Network
             fallback.GetComponent<Renderer>().material.color = ColorForKey(key);
             fallback.GetComponent<Collider>().enabled = false;
             visualRoot = fallback.transform;
+            swingVisual = marker.AddComponent<PlayerSwingVisual>();
+            var fallbackLine = marker.AddComponent<LineRenderer>();
+            swingVisual.Configure(visualRoot, configuredWebLine: fallbackLine);
+            animationController = marker.AddComponent<PlayerAnimationController>();
+            animationController.Configure(visualRoot);
             return marker;
         }
 
@@ -202,6 +435,20 @@ namespace SpiderSwing.Network
                 Destroy(remotePlayer.Marker);
                 playerMarkers.Remove(key);
             }
+        }
+
+        private void ClearRemotePlayers()
+        {
+            foreach (var remotePlayer in playerMarkers.Values)
+            {
+                if (remotePlayer.Marker != null)
+                {
+                    Destroy(remotePlayer.Marker);
+                }
+            }
+
+            playerMarkers.Clear();
+            localPlayerNumber = 0;
         }
 
         private void Update()
@@ -318,6 +565,36 @@ namespace SpiderSwing.Network
                 }
             }
 
+            var playerController = localPlayerMarker.GetComponent<LocalPlayerController>();
+            if (playerController != localPlayerController)
+            {
+                if (localPlayerController != null)
+                {
+                    localPlayerController.OnSwingStateChanged -= HandleLocalSwingChanged;
+                }
+
+                localPlayerController = playerController;
+                if (localPlayerController != null)
+                {
+                    localPlayerController.OnSwingStateChanged += HandleLocalSwingChanged;
+                }
+            }
+
+            var animationController = localPlayerMarker.GetComponent<PlayerAnimationController>();
+            if (animationController != localAnimationController)
+            {
+                if (localAnimationController != null)
+                {
+                    localAnimationController.OnAnimationStateChanged -= HandleLocalAnimationChanged;
+                }
+
+                localAnimationController = animationController;
+                if (localAnimationController != null)
+                {
+                    localAnimationController.OnAnimationStateChanged += HandleLocalAnimationChanged;
+                }
+            }
+
             localSkinVisual = localPlayerMarker.GetComponent<PlayerSkinVisual>()
                 ?? localPlayerMarker.gameObject.AddComponent<PlayerSkinVisual>();
         }
@@ -346,6 +623,86 @@ namespace SpiderSwing.Network
             _ = SendLocalSkin(skinId);
         }
 
+        private void HandleLocalSwingChanged(bool active, Vector3 anchor)
+        {
+            _ = SendLocalSwing(active, anchor);
+        }
+
+        private void HandleLocalAnimationChanged(PlayerAnimationState state)
+        {
+            _ = SendLocalAnimation(state);
+        }
+
+        private async Task SendLocalSwing(bool active, Vector3 anchor)
+        {
+            if (room == null || status != "Connected")
+            {
+                return;
+            }
+
+            try
+            {
+                await room.Send("swing", new Dictionary<string, object>
+                {
+                    ["active"] = active,
+                    ["anchorX"] = anchor.x,
+                    ["anchorY"] = anchor.y,
+                    ["anchorZ"] = anchor.z,
+                });
+            }
+            catch (Exception exception)
+            {
+                lastError = exception.Message;
+                Debug.LogWarning("Unable to send the local swing state.", this);
+            }
+        }
+
+        private async Task SendLocalAnimation(PlayerAnimationState state)
+        {
+            if (room == null
+                || status != "Connected"
+                || isSendingAnimation
+                || !PlayerAnimationController.IsValidState((int)state))
+            {
+                return;
+            }
+
+            isSendingAnimation = true;
+            try
+            {
+                await room.Send("animation", new Dictionary<string, object>
+                {
+                    ["state"] = (int)state,
+                });
+            }
+            catch (Exception exception)
+            {
+                lastError = exception.Message;
+                Debug.LogWarning("Unable to send the local animation state.", this);
+            }
+            finally
+            {
+                isSendingAnimation = false;
+            }
+        }
+
+        private static PlayerAnimationState ReadAnimationState(DynamicSchema player)
+        {
+            try
+            {
+                var value = player.Get<int>("animationState");
+                return PlayerAnimationController.IsValidState(value)
+                    ? (PlayerAnimationState)value
+                    : PlayerAnimationState.Idle;
+            }
+            catch
+            {
+                // Keep the client compatible with a room that has not yet
+                // reloaded the new schema during local development.
+                return PlayerAnimationState.Idle;
+            }
+        }
+
         private static Color ColorForKey(string key)
         {
             var hash = Math.Abs(key.GetHashCode());
@@ -354,20 +711,32 @@ namespace SpiderSwing.Network
 
         private async void OnDestroy()
         {
+            isDestroying = true;
+            connectionCancellation?.Cancel();
+
             if (localUpgradeState != null)
             {
                 localUpgradeState.OnSkinChanged -= HandleLocalSkinChanged;
             }
 
-            if (room != null)
+            if (localPlayerController != null)
             {
-                await room.Leave();
+                localPlayerController.OnSwingStateChanged -= HandleLocalSwingChanged;
             }
+
+            if (localAnimationController != null)
+            {
+                localAnimationController.OnAnimationStateChanged -= HandleLocalAnimationChanged;
+            }
+
+            await LeaveCurrentRoom();
+            connectionCancellation?.Dispose();
+            connectionCancellation = null;
         }
 
         private void OnGUI()
         {
-            GUILayout.BeginArea(new Rect(12f, 12f, 420f, 90f), GUI.skin.box);
+            GUILayout.BeginArea(new Rect(12f, 12f, 420f, 140f), GUI.skin.box);
             GUILayout.Label($"Colyseus: {status}");
             GUILayout.Label($"Room: {roomName}   Player: {(localPlayerNumber == 0 ? "-" : localPlayerNumber.ToString())}");
             GUILayout.Label($"Transform sync: {(room != null && status == "Connected" ? $"{transformSendRate:0} Hz" : "offline")}");
@@ -375,6 +744,12 @@ namespace SpiderSwing.Network
             {
                 GUILayout.Label(lastError);
             }
+
+            if (!isConnecting && status != "Connected" && GUILayout.Button("Retry Multiplayer"))
+            {
+                BeginConnect();
+            }
+
             GUILayout.EndArea();
         }
     }
